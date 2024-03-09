@@ -5,12 +5,28 @@ import numpy as np
 def swap(a,b):
     return (b,a)
 
-class Maxheap:
+class Heap:
     def __init__(self,maxsize):
         self.maxsize = maxsize
         self.size = 0
         self.heap = np.array([])
+    #Return position of i's parent
+    def parentPos(self,pos):
+        if self.size > 0:
+            return math.floor((pos-1) / 2)
+    def leftChildPos(self,pos):
+        childPos = (2 * pos)+1
+        if self.size > 0:
+            return childPos
+    def rightChildPos(self,pos):
+        childPos = (2 * pos)+2
+        if self.size > 0:
+            return childPos
+    def printHeap(self):
+        print ("Print heap: ")
+        print(self.heap, end=" ")
 
+class Maxheap(Heap):
     def heapMaximum(self):
         if self.size > 0:
             return self.heap[0]
@@ -34,19 +50,6 @@ class Maxheap:
             self.heap[self.size-1] = value
             self.heapIncreaseKey(self.size-1,value)
 
-    #Return position of i's parent
-    def parentPos(self, pos):
-        if self.size > 0:
-            return math.floor((pos-1) / 2)
-
-    def leftChildPos(self, pos):
-        childPos = (2 * pos)+1
-        if self.size > 0:
-            return childPos
-    def rightChildPos(self, pos):
-        childPos = (2 * pos)+2
-        if self.size > 0:
-            return childPos
     def maxHeapify(self,pos):
         left = self.leftChildPos(pos)
         right = self.rightChildPos(pos)
@@ -68,10 +71,6 @@ class Maxheap:
         for i in range(start_index,-1,-1):
             self.maxHeapify(i)
 
-    def printMaxheap(self):
-        print ("Print max-heap: ")
-        print(self.heap, end=" ")
-
 #TODO remove these tests
 """
 h1 = Maxheap(10)
@@ -79,6 +78,6 @@ arr = np.array([4,1,3,2,16,9,10,14,8,7])
 print("Stampo array: ",arr)
 
 h1.buildMaxHeap(arr)
-h1.printMaxheap()
+h1.printHeap()
 """
 

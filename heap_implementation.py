@@ -1,4 +1,3 @@
-import array
 import math
 import numpy as np
 
@@ -63,13 +62,21 @@ class Maxheap(Heap):
             self.heap[pos],self.heap[maxValuePos] = swap(self.heap[pos],self.heap[maxValuePos])
             self.maxHeapify(maxValuePos)
 
-
     def buildMaxHeap(self,a):
         self.size = len(a)
         self.heap = a
         start_index = math.floor(len(a)/2)-1
         for i in range(start_index,-1,-1):
             self.maxHeapify(i)
+
+    def heapExtractMax(self):
+        if self.size < 1:
+            return None
+        maxValue = self.heap[0]
+        self.heap[0] = self.heap[self.size-1]
+        self.size -= 1
+        self.maxHeapify(0) #FIXME
+        return maxValue
 
 #TODO remove these tests
 """

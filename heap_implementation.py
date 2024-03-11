@@ -98,7 +98,7 @@ class Maxheap(Heap):
         if self.size > 0:
             return self._rankR(target, 0)
         else:
-            return None
+            return 0
 
 
 #TODO remove these tests

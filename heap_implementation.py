@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 def swap(a,b):
@@ -12,7 +11,7 @@ class Heap:
     #Return position of i's parent
     def parentPos(self,pos):
         if self.size > 0:
-            return math.floor((pos-1) / 2)
+            return (pos-1) // 2
     def leftChildPos(self,pos):
         childPos = (2 * pos)+1
         if self.size > 0:
@@ -22,20 +21,21 @@ class Heap:
         if self.size > 0:
             return childPos
     def printHeap(self):
-        print ("Print heap: ")
-        print(self.heap, end=" ")
+        #print ("Print heap: ")
+        print("\n",self.heap, end=" ")
 
     def heapify(self,pos):
         pass
     def editKey(self,i,value):
         pass
-    def extract(self):
+    def extractRoot(self):
         if self.size < 1:
             return None
         rootValue = self.heap[0]
         self.heap[0] = self.heap[self.size-1]
         self.size -= 1
-        self.heapify(0) #FIXME
+        self.heap = self.heap[:self.size]
+        self.heapify(0)
         return rootValue
     def buildHeap(self,a):
         self.size = len(a)
@@ -44,12 +44,25 @@ class Heap:
         for i in range(start_index,-1,-1):
             self.heapify(i)
     #return max or min value of the heap
-    def rootPop(self):
+    def rootValue(self):
         if self.size > 0:
             return self.heap[0]
         else:
             print("Heap is empty")
             return
+
+    #extracts the root, so is not re-usable
+    def osRankNotOptimized(self,value):
+        tmpRank = 0
+        root = self.extractRoot()
+
+        while tmpRank < self.size:
+            if root == value:
+                return tmpRank+1
+            else:
+                tmpRank += 1
+                root = self.extractRoot()
+        return 0
 
     #FIXME overflow index
     def insert(self, value):
@@ -96,8 +109,8 @@ class Maxheap(Heap):
             return lValue + rValue + 1
         return 0
 
-
-    def osRank(self, target):
+    #doesn't extract the root, so is re-usable
+    def osRankOptimized(self, target):
         if self.size > 0:
             return self._rankR(target, 0)
         else:
@@ -128,27 +141,36 @@ class Minheap(Heap):
 
 
 #TODO remove these tests
+
 """
 h1 = Maxheap(10)
 arr = np.array([4,1,3,2,16,9,10,14,8,7])
+
 print("Stampo array: ",arr)
+h1.buildHeap(arr)
+h1.printHeap()
+print("lunghezza array: ", len(h1.heap))
 """
-h1 = Maxheap(10)
+h1 = Maxheap(12)
 #arr = np.array([8,5,10,3,12,7])
 arr = np.array([38,203,1,45,39,10,34,90,10,2,100,1])
 h1.buildHeap(arr)
 h1.printHeap()
+print("lunghezza heap: ", len(h1.heap))
+
 """
 while h1.heapMaximum() != 39:
     print(h1.heapExtractMax())
 h1.printHeap()
-"""
+
 print("Rango di 39: ")
 print(h1.osRank(39))
-
-"""
 h1 = Maxheap(10)
 h1.heapInsert(2)
 h1.heapInsert(10)
 h1.printHeap()
 """
+
+print("\n Rango di 5: ")
+print(h1.osRankNotOptimized(100))
+#print(h1.osRankOptimized(1))

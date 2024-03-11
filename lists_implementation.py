@@ -6,11 +6,13 @@ class Node:
 class LinkedList:
     def __init__(self):
         self.head = None
+        self.length = 0
     #head insert
     def addElement(self, value):
         newNode = Node(value)
         newNode.next = self.head
         self.head = newNode
+        self.length += 1
     def printList(self):
         currentNode = self.head
         while currentNode:
@@ -49,6 +51,7 @@ class SortedLinkedList(LinkedList):
     #adds elements in grow way
     def addElement(self, value):
         newNode = Node(value)
+        self.length += 1
         if not self.head or value < self.head.value:
             newNode.next = self.head
             self.head = newNode
@@ -59,18 +62,37 @@ class SortedLinkedList(LinkedList):
             newNode.next = currentNode.next
             currentNode.next = newNode
     def minElement(self):
-        if not self.head
+        if not self.head:
             return None
         else:
             return self.head.value
+    def median(self):
+        if not self.head:
+            return None
+        if self.length == 1:
+            return self.head.value
+        medianIndex = self.length // 2
+        currentNode = self.head
+        for i in range(medianIndex-1):
+            currentNode = currentNode.next
+        if self.length % 2 == 0:
+            return (currentNode.value + currentNode.next.value) / 2
+        else:
+            return currentNode.next.value
+
 
 #Testing implementation
 myList = SortedLinkedList()
 myList.addElement(30)
 myList.addElement(10)
+myList.addElement(16)
 myList.addElement(12)
+myList.addElement(40)
+myList.addElement(50)
 myList.addElement(15)
 myList.printList()
+print("trova mediana:")
+print(myList.median())
 """
 print("trova max:")
 print(myList.maxElement())

@@ -43,15 +43,37 @@ class LinkedList:
             currentNode = currentNode.next
         return min
 
+class SortedLinkedList(LinkedList):
+    def __init__(self):
+        super().__init__()
+    #adds elements in grow way
+    def addElement(self, value):
+        newNode = Node(value)
+        if not self.head or value < self.head.value:
+            newNode.next = self.head
+            self.head = newNode
+        else:
+            currentNode = self.head
+            while currentNode.next and currentNode.next.value < value:
+                currentNode = currentNode.next
+            newNode.next = currentNode.next
+            currentNode.next = newNode
+    def minElement(self):
+        if not self.head
+            return None
+        else:
+            return self.head.value
 
 #Testing implementation
-myList = LinkedList()
+myList = SortedLinkedList()
 myList.addElement(30)
 myList.addElement(10)
 myList.addElement(12)
 myList.addElement(15)
 myList.printList()
+"""
 print("trova max:")
 print(myList.maxElement())
 print("trova min:")
 print(myList.minElement())
+"""

@@ -41,6 +41,7 @@ class Maxheap(Heap):
             self.heap[i],self.heap[self.parentPos(i)] = swap(self.heap[i],self.heap[self.parentPos(i)])
             i = self.parentPos(i)
 
+#FIXME overflow index
     def heapInsert(self,value):
             if self.size >= self.maxsize:
                 print("Heap is full")
@@ -78,13 +79,50 @@ class Maxheap(Heap):
         self.maxHeapify(0) #FIXME
         return maxValue
 
+#TODO implment it for min-heap
+    #optimized os-rank with O(rank)
+    def _rankR(self, target, currentNodeIndex):
+        currentNodeValue = self.heap[currentNodeIndex]
+        if currentNodeValue >= target:
+            lValue = 0
+            rValue = 0
+            if self.leftChildPos(currentNodeIndex) < self.size:
+                lValue = self._rankR(target, self.leftChildPos(currentNodeIndex))
+            if self.rightChildPos(currentNodeIndex) < self.size:
+                rValue = self._rankR(target, self.rightChildPos(currentNodeIndex))
+            return lValue + rValue + 1
+        return 0
+
+
+    def osRank(self, target):
+        if self.size > 0:
+            return self._rankR(target, 0)
+        else:
+            return None
+
+
 #TODO remove these tests
 """
 h1 = Maxheap(10)
 arr = np.array([4,1,3,2,16,9,10,14,8,7])
 print("Stampo array: ",arr)
-
+"""
+h1 = Maxheap(10)
+#arr = np.array([8,5,10,3,12,7])
+arr = np.array([38,203,1,45,39,10,34,90,10,2,100,1])
 h1.buildMaxHeap(arr)
 h1.printHeap()
 """
+while h1.heapMaximum() != 39:
+    print(h1.heapExtractMax())
+h1.printHeap()
+"""
+print("Rango di 39: ")
+print(h1.osRank(39))
 
+"""
+h1 = Maxheap(10)
+h1.heapInsert(2)
+h1.heapInsert(10)
+h1.printHeap()
+"""

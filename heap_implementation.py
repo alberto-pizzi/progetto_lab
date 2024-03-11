@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def swap(a,b):
     return (b,a)
@@ -44,9 +45,32 @@ class Heap:
         for i in range(start_index,-1,-1):
             self.heapify(i)
     #return max or min value of the heap
-    def rootValue(self):
+    def _rootValue(self):
         if self.size > 0:
             return self.heap[0]
+        else:
+            print("Heap is empty")
+            return
+
+    def minimum(self):
+        if self.size > 0:
+            middle = math.ceil(self.size/2)
+            minimum = self.heap[middle]
+            for i in range(middle,self.size):
+                if self.heap[i] < minimum:
+                    minimum = self.heap[i]
+            return minimum
+        else:
+            print("Heap is empty")
+            return
+    def maximum(self):
+        if self.size > 0:
+            middle = math.ceil(self.size/2)
+            maximum = self.heap[middle]
+            for i in range(middle,self.size):
+                if self.heap[i] > maximum:
+                    maximum = self.heap[i]
+            return maximum
         else:
             print("Heap is empty")
             return
@@ -64,14 +88,14 @@ class Heap:
                 root = self.extractRoot()
         return 0
 
-    #FIXME overflow index
+    #FIXME fix implementation of array (with dots)
     def insert(self, value):
-            if self.size >= self.maxsize:
-                print("Heap is full")
-                return
-            self.size += 1
-            self.heap[self.size-1] = value
-            self.editKey(self.size - 1, value)
+        if self.size >= self.maxsize:
+            print("Heap is full")
+            return
+        self.size += 1
+        self.heap = np.append(self.heap,value)
+        self.editKey(self.size-1, value)
 
 class Maxheap(Heap):
     def editKey(self, i, value):
@@ -79,7 +103,7 @@ class Maxheap(Heap):
             print("New key is lower than the old one")
             return
         self.heap[i] = value
-        while (i > 0) and (self.heap[self.parentPos(i)]):
+        while (i > 0) and (self.heap[self.parentPos(i)] < self.heap[i]):
             self.heap[i],self.heap[self.parentPos(i)] = swap(self.heap[i],self.heap[self.parentPos(i)])
             i = self.parentPos(i)
     def heapify(self, pos):
@@ -94,8 +118,9 @@ class Maxheap(Heap):
         if maxValuePos != pos:
             self.heap[pos],self.heap[maxValuePos] = swap(self.heap[pos],self.heap[maxValuePos])
             self.heapify(maxValuePos)
-
-#TODO implment it for min-heap or remove it
+    def maximum(self):
+        return super()._rootValue()
+#TODO implment it for min-heap or remove it, fix it
     #optimized os-rank with O(rank)
     def _rankR(self, target, currentNodeIndex):
         currentNodeValue = self.heap[currentNodeIndex]
@@ -122,7 +147,7 @@ class Minheap(Heap):
             print("New key is bigger than the old one")
             return
         self.heap[i] = value
-        while (i > 0) and (self.heap[self.parentPos(i)]):
+        while (i > 0) and (self.heap[self.parentPos(i)] > self.heap[i]):
             self.heap[i],self.heap[self.parentPos(i)] = swap(self.heap[i],self.heap[self.parentPos(i)])
             i = self.parentPos(i)
 
@@ -139,6 +164,9 @@ class Minheap(Heap):
             self.heap[pos],self.heap[minValuePos] = swap(self.heap[pos],self.heap[minValuePos])
             self.heapify(minValuePos)
 
+    def minimum(self):
+        return super()._rootValue()
+
 
 #TODO remove these tests
 
@@ -150,13 +178,47 @@ print("Stampo array: ",arr)
 h1.buildHeap(arr)
 h1.printHeap()
 print("lunghezza array: ", len(h1.heap))
-"""
+
 h1 = Maxheap(12)
 #arr = np.array([8,5,10,3,12,7])
 arr = np.array([38,203,1,45,39,10,34,90,10,2,100,1])
 h1.buildHeap(arr)
 h1.printHeap()
 print("lunghezza heap: ", len(h1.heap))
+"""
+h1 = Maxheap(10)
+h1.insert(4)
+h1.insert(1)
+h1.insert(3)
+h1.insert(2)
+h1.insert(16)
+h1.insert(9)
+h1.insert(10)
+h1.insert(14)
+h1.insert(8)
+h1.insert(7)
+print("Stampa heap: ")
+h1.printHeap()
+
+
+h2 = Maxheap(10)
+arr = np.array([4,1,3,2,16,9,10,14,8,7])
+h2.buildHeap(arr)
+print("Stampa heap: ")
+h2.printHeap()
+print("\n Trova il minimo: ")
+print(h2.minimum())
+print("\n Trova il max: ")
+print(h2.maximum())
+
+h3 = Minheap(3)
+h3.insert(3)
+h3.insert(2)
+h3.insert(16)
+print("\n Trova il minimo: ")
+print(h3.minimum())
+print("\n Trova il max: ")
+print(h3.maximum())
 
 """
 while h1.heapMaximum() != 39:
@@ -166,11 +228,11 @@ h1.printHeap()
 print("Rango di 39: ")
 print(h1.osRank(39))
 h1 = Maxheap(10)
-h1.heapInsert(2)
-h1.heapInsert(10)
+h1.insert(2)
+h1.insert(10)
 h1.printHeap()
 """
 
-print("\n Rango di 100: ")
+print("\n Rango di 1: ")
 #print(h1.osRankNotOptimized(100))
-print(h1.osRankOptimized(1))
+#print(h1.osRankOptimized(1))

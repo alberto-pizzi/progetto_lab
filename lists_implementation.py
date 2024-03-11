@@ -18,12 +18,13 @@ class LinkedList:
         while currentNode:
             print(currentNode.value)
             currentNode = currentNode.next
-    #FIXME improve value not found case
     def searchElement(self, value):
         currentNode = self.head
-        while currentNode.value != None and currentNode.value != value:
+        while currentNode is not None:
+            if currentNode.value == value:
+                return True
             currentNode = currentNode.next
-        return currentNode.value
+        return False
     def maxElement(self):
         if not self.head:
             return None
@@ -105,7 +106,9 @@ print(myList.median())
 print("trova minimo:")
 print(myList.minElement())
 print("nodo con terza chiave più piccola")
-print(myList.osSelect(9))
+print(myList.osSelect(2))
+print("Ricerca valore 2")
+print(myList.searchElement(40))
 """
 print("trova max:")
 print(myList.maxElement())

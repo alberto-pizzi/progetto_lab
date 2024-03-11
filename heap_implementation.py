@@ -95,7 +95,7 @@ class Maxheap(Heap):
             self.heap[pos],self.heap[maxValuePos] = swap(self.heap[pos],self.heap[maxValuePos])
             self.heapify(maxValuePos)
 
-#TODO implment it for min-heap
+#TODO implment it for min-heap or remove it
     #optimized os-rank with O(rank)
     def _rankR(self, target, currentNodeIndex):
         currentNodeValue = self.heap[currentNodeIndex]
@@ -171,6 +171,6 @@ h1.heapInsert(10)
 h1.printHeap()
 """
 
-print("\n Rango di 5: ")
-print(h1.osRankNotOptimized(100))
-#print(h1.osRankOptimized(1))
+print("\n Rango di 100: ")
+#print(h1.osRankNotOptimized(100))
+print(h1.osRankOptimized(1))

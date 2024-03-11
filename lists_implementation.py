@@ -80,6 +80,15 @@ class SortedLinkedList(LinkedList):
         else:
             return currentNode.next.value
 
+    def osSelect(self,k):
+        if k > self.length:
+            return None
+        currentNode = self.head
+        i = 1
+        while i < k and currentNode:
+            i += 1
+            currentNode = currentNode.next
+        return currentNode.value
 
 #Testing implementation
 myList = SortedLinkedList()
@@ -93,6 +102,10 @@ myList.addElement(15)
 myList.printList()
 print("trova mediana:")
 print(myList.median())
+print("trova minimo:")
+print(myList.minElement())
+print("nodo con terza chiave più piccola")
+print(myList.osSelect(9))
 """
 print("trova max:")
 print(myList.maxElement())

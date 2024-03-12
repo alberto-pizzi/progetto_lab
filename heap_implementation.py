@@ -96,7 +96,6 @@ class Heap:
         self.heap = np.append(self.heap,value)
         self.editKey(self.size-1, value)
 
-    #TODO implement it
     def osSelect(self,k):
         if self.size <= 0 or k < 1 or k > self.size:
             return None

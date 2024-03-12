@@ -96,6 +96,14 @@ class Heap:
         self.heap = np.append(self.heap,value)
         self.editKey(self.size-1, value)
 
+    #TODO implement it
+    def osSelect(self,k):
+        if self.size <= 0 or k < 1 or k > self.size:
+            return None
+        for i in range(k):
+            root = self.extractRoot()
+        return root
+
 class Maxheap(Heap):
     def editKey(self, i, value):
         if value < self.heap[i]:
@@ -198,6 +206,8 @@ h1.insert(8)
 h1.insert(7)
 print("Stampa heap: ")
 h1.printHeap()
+print("stampa i-esimo elemento più grande")
+print(h1.osSelect(3))
 
 
 h2 = Maxheap(10)

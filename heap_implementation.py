@@ -79,7 +79,6 @@ class Heap:
     def osRankNotOptimized(self,value):
         tmpRank = 0
         root = self.extractRoot()
-
         while tmpRank < self.size:
             if root == value:
                 return tmpRank+1

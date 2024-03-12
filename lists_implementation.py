@@ -90,6 +90,16 @@ class SortedLinkedList(LinkedList):
             i += 1
             currentNode = currentNode.next
         return currentNode.value
+    def osRank(self,value):
+        tmpRank = 0
+        currentNode = self.head
+        while currentNode is not None:
+            tmpRank += 1
+            if currentNode.value == value:
+                return tmpRank
+            currentNode = currentNode.next
+        return 0
+
 
 #Testing implementation
 myList = SortedLinkedList()
@@ -109,6 +119,8 @@ print("nodo con terza chiave più piccola")
 print(myList.osSelect(2))
 print("Ricerca valore 2")
 print(myList.searchElement(40))
+print("Rango di 1: ")
+print(myList.osRank(1))
 """
 print("trova max:")
 print(myList.maxElement())

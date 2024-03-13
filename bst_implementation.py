@@ -125,13 +125,49 @@ class BST:
             y.left.parent = y
 
     # Finds k-th smallest value
-    def osSelect(self,root,k):
+    def osSelectSmallest(self,root,k):
         currentNode = self.treeMinimum(root)
 
         for i in range(k-1):
             currentNode = self.nodeSuccessor(currentNode)
         return currentNode
 
+    # Finds k-th biggest value
+    def osSelectBiggest(self,root,k):
+        currentNode = self.treeMaximum(root)
+
+        for i in range(k-1):
+            currentNode = self.nodePredecessor(currentNode)
+        return currentNode
+
+    def size(self,root):
+        if root is None:
+            return 0
+        return self.size(root.left) + self.size(root.right) + 1
+
+    # FIXME per i valori non presente restituisce il rango più alto, invece di None
+    def osRank(self,root,target):
+        if root is None:
+            return 0
+        if target < root.value:
+            return self.osRank(root.left, target)
+        elif target > root.value:
+            return 1 + self.size(root.left) + self.osRank(root.right, target)
+        else:
+            return self.size(root.left) + 1
+    # TODO vedre quali delle due implementazioni è la migliore
+    # FIXME per i valori non presente restituisce il rango più alto, invece di None
+"""    def osRank(self,root,target):
+        if root is None:
+            return 0
+
+        rankLeft = self.osRank(root.left,target)
+        rankRight = self.osRank(root.right,target)
+
+        if root.value <= target:
+            return 1 + rankLeft + rankRight
+        else:
+            return rankLeft + rankRight"""
 
 
 albero = BST()
@@ -155,7 +191,9 @@ print("il min è: ", albero.treeMinimum(albero.root).value)
 
 print("\nil predecessore di 40: ", albero.nodePredecessor(albero.searchNode(40)).value)
 
-print("il 3 valore più piccolo è ", albero.osSelect(albero.root,3).value)
+print("il 3 valore più piccolo è ", albero.osSelectSmallest(albero.root,3).value)
+
+print("il rango di 70 è: ", albero.osRank(albero.root,100))
 #print("nodo 40 :",albero.searchNode(40).value)
 #albero.treeDelete(albero.searchNode(40))
 #albero.inorderTraversal(albero.root)

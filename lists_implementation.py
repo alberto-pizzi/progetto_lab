@@ -3,21 +3,40 @@ class Node:
     def __init__(self, value):
         self.value = value
         self.next = None
+    #TODO remove them if not useful
+    def getValue(self):
+        return self.value
+
+    def getNextNode(self):
+        return self.next
+
+    def setValue(self, value):
+        self.value = value
+
+    def setNextNode(self, nextNode):
+        self.next = nextNode
 class LinkedList:
     def __init__(self):
         self.head = None
         self.length = 0
-    #head insert
+
+    #Inserts the new element into the head
     def addElement(self, value):
         newNode = Node(value)
         newNode.next = self.head
         self.head = newNode
         self.length += 1
+
+    #Prints full list
     def printList(self):
         currentNode = self.head
+        posCounter = 1
         while currentNode:
-            print(currentNode.value)
+            print("pos", posCounter, ": ",currentNode.value)
             currentNode = currentNode.next
+            posCounter += 1
+
+    #Searches element inside list from input value
     def searchElement(self, value):
         currentNode = self.head
         while currentNode is not None:
@@ -25,6 +44,8 @@ class LinkedList:
                 return True
             currentNode = currentNode.next
         return False
+
+    # Searches and returns max element from list (not sorted)
     def maxElement(self):
         if not self.head:
             return None
@@ -35,6 +56,8 @@ class LinkedList:
                 max = currentNode.value
             currentNode = currentNode.next
         return max
+
+    #Searches and returns min element from list (not sorted)
     def minElement(self):
         if not self.head:
             return None
@@ -49,7 +72,8 @@ class LinkedList:
 class SortedLinkedList(LinkedList):
     def __init__(self):
         super().__init__()
-    #adds elements in grow way
+
+    #Adds elements in grow way
     def addElement(self, value):
         newNode = Node(value)
         self.length += 1
@@ -62,11 +86,15 @@ class SortedLinkedList(LinkedList):
                 currentNode = currentNode.next
             newNode.next = currentNode.next
             currentNode.next = newNode
+
+    #Returns min element from sorted list (growing way)
     def minElement(self):
         if not self.head:
             return None
         else:
             return self.head.value
+
+    #Returns median element from sorted list
     def median(self):
         if not self.head:
             return None
@@ -81,6 +109,7 @@ class SortedLinkedList(LinkedList):
         else:
             return currentNode.next.value
 
+    #Returns k-th smallest element from sorted list
     def osSelect(self,k):
         if k > self.length:
             return None

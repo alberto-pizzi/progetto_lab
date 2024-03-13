@@ -290,7 +290,6 @@ def testOSLinkedList():
     linkedList.testMaxSearching(maxElement)
 
 if __name__ == "__main__":
-    # FIXME remove comments
     # Test lists
     linkedList = LinkedList()
     testLinkedList(linkedList)

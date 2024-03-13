@@ -5,10 +5,9 @@ def swap(a,b):
     return (b,a)
 
 class Heap:
-    def __init__(self,maxsize):
-        self.maxsize = maxsize
+    def __init__(self):
         self.size = 0
-        self.heap = np.array([])
+        self.heap = []
     #Return position of i's parent
     def parentPos(self,pos):
         if self.size > 0:
@@ -38,6 +37,7 @@ class Heap:
         self.heap = self.heap[:self.size]
         self.heapify(0)
         return rootValue
+    # FIXME non produce lo stesso array che produce heapInsert
     def buildHeap(self,a):
         self.size = len(a)
         self.heap = a
@@ -89,11 +89,13 @@ class Heap:
 
     #FIXME fix implementation of array (with dots)
     def insert(self, value):
+        """
         if self.size >= self.maxsize:
             print("Heap is full")
             return
+        """
         self.size += 1
-        self.heap = np.append(self.heap,value)
+        self.heap = np.append(self.heap,True)
         self.editKey(self.size-1, value)
 
     def osSelect(self,k):
@@ -105,7 +107,7 @@ class Heap:
 
 class Maxheap(Heap):
     def editKey(self, i, value):
-        if value < self.heap[i]:
+        if value < self.heap[i] or self.heap[i]:
             print("New key is lower than the old one")
             return
         self.heap[i] = value
@@ -174,9 +176,18 @@ class Minheap(Heap):
         return super()._rootValue()
 
 
+"""
+def median(heap):
+    if type(heap) == Maxheap:
+        #implementation
+    elif type(heap) == Minheap:
+        #implementation
+    else:
+        return None
+
 #TODO remove these tests
 
-"""
+
 h1 = Maxheap(10)
 arr = np.array([4,1,3,2,16,9,10,14,8,7])
 
@@ -191,7 +202,7 @@ arr = np.array([38,203,1,45,39,10,34,90,10,2,100,1])
 h1.buildHeap(arr)
 h1.printHeap()
 print("lunghezza heap: ", len(h1.heap))
-"""
+
 h1 = Maxheap(10)
 h1.insert(4)
 h1.insert(1)
@@ -228,7 +239,7 @@ print(h3.minimum())
 print("\n Trova il max: ")
 print(h3.maximum())
 
-"""
+
 while h1.heapMaximum() != 39:
     print(h1.heapExtractMax())
 h1.printHeap()
@@ -241,6 +252,14 @@ h1.insert(10)
 h1.printHeap()
 """
 
-print("\n Rango di 1: ")
+h4 = Maxheap()
+#for i in range(10):
+    #h4.insert(i+1)
+arr = [1,2,3,4,5,6,7,8,9,10]
+h4.buildHeap(arr)
+h4.printHeap()
+print(h4.heap[2])
+
+#print("\n Rango di 1: ")
 #print(h1.osRankNotOptimized(100))
 #print(h1.osRankOptimized(1))

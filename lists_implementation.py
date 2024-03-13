@@ -32,7 +32,7 @@ class LinkedList:
 
     def testLength(self):
         if self.length == self._size():
-            print("\nLength is right, is: ", self.length)
+            print("\nLength is right, that is: ", self.length)
         else:
             print("\nLength is wrong")
 
@@ -85,6 +85,16 @@ class LinkedList:
                 min = currentNode.value
             currentNode = currentNode.next
         return min
+    def testMinSearching(self,expectedValue):
+        if (self.minElement() == expectedValue):
+            print("Min finding is right. Min is ", expectedValue)
+        else:
+            print("Min finding is wrong")
+    def testMaxSearching(self,expectedValue):
+        if (self.maxElement() == expectedValue):
+            print("Max finding is right. Min is ", expectedValue)
+        else:
+            print("Max finding is wrong")
 
 
 class SortedLinkedList(LinkedList):
@@ -111,7 +121,6 @@ class SortedLinkedList(LinkedList):
             return None
         else:
             return self.head.value
-    # TODO implement binary search
     # Returns median element from sorted list
     def median(self):
         if not self.head:
@@ -164,11 +173,13 @@ class SortedLinkedList(LinkedList):
             print("The result (rank) is wrong")
 
 
-#Tests linked lists (length, search, insert)
-def testLinkedList():
+#Tests linked lists or sorted linked lists (length, search, insert)
+def testLinkedList(linkedList):
     # Creates list of random length
-    print("\n--------Linked list (not sorted) test--------\n")
-    linkedList = LinkedList()
+    if type(linkedList) == SortedLinkedList:
+        print("\n--------Sorted linked list test--------\n")
+    else:
+        print("\n--------Linked list (not sorted) test--------\n")
     print("\nList :\n")
     for i in range(random.randint(20, 100)):
         linkedList.addElement(random.randint(0, 1000))
@@ -177,29 +188,17 @@ def testLinkedList():
     print("\nTest length:")
     linkedList.testLength()
     linkedList.addElement(random.randint(1, 1000))
-    print("Add new value and test length:")
+    print("Now, we add a new value and re-test length:")
     linkedList.testLength()
 
     # Tests search
     valueNotInList = 1500
     valueInList = 500
-    print("\n",valueNotInList,"is in the list? ")
-    print(linkedList.searchElement(valueNotInList))
+    print("\n",valueNotInList,"is in the list? ",linkedList.searchElement(valueNotInList))
     linkedList.addElement(valueInList)
-    print("\n",valueInList,"is in the list? ")
-    print(linkedList.searchElement(valueInList))
+    print("\n",valueInList,"is in the list? ",linkedList.searchElement(valueInList))
 
-def testSortedLinkedList():
-    # Creates list of random length
-    print("\n--------Sorted linked list test--------\n")
-    sortedList = SortedLinkedList()
-    print("\nSorted list :\n")
-    for i in range(random.randint(20, 100)):
-        sortedList.addElement(random.randint(0, 1000))
-    sortedList.printList()
-
-    #TODO finish it
-
+# This function create another specific list
 def testOSSortedLinkedList():
     # Test values
     numEven = 10
@@ -208,11 +207,15 @@ def testOSSortedLinkedList():
     medianExpectedFromOdd = 6
     medianNotExpected = 15
 
+
     # Tests OS implementations with specific sorted linked list
     print("\n--------OS test for sorted linked list--------\n")
     evenLengthList = SortedLinkedList()
     oddLengthList = SortedLinkedList()
 
+    print("Test values are:")
+    print("\nMin expected:", minElement, "\nMedian expected from even length:", medianExpectedFromEven)
+    print("\nMedian NOT expected:", medianNotExpected, "\nMedian expected from odd length:", medianExpectedFromOdd)
     #Fills lists
     for i in range(minElement,numEven+1):
         evenLengthList.addElement(i)
@@ -236,24 +239,18 @@ def testOSSortedLinkedList():
 
     # Test min value finding for sorted linked list.
     # The following tests are made ONLY FOR ONE list, because length of list is not relevant
-    if (evenLengthList.minElement() == minElement):
-        print("Min finding is right. Min is ", minElement)
-    else:
-        print("Min finding is wrong")
+    evenLengthList.testMinSearching(minElement)
     # Test max value finding for sorted linked list.
-    if (evenLengthList.maxElement() == numEven):
-        print("Max finding is right. Min is ", numEven)
-    else:
-        print("Max finding is wrong")
+    evenLengthList.testMaxSearching(numEven)
 
     # Tests OS-select
     inputOSSelect = 3
     expectedValue = 3
     notExpectedValue = 2*inputOSSelect
 
-    print("\nTest OS-select with expected value from sorted linked list:")
+    print("\nTest OS-select with expected value (",expectedValue,") from sorted linked list:")
     evenLengthList.testOSSelect(inputOSSelect, expectedValue)
-    print("\nTest OS-select with NOT expected value from sorted linked list:")
+    print("\nTest OS-select with NOT expected value (",notExpectedValue,") from sorted linked list:")
     evenLengthList.testOSSelect(inputOSSelect, notExpectedValue)
 
     # Tests OS-rank (return position, rank, of value)
@@ -262,14 +259,44 @@ def testOSSortedLinkedList():
     expectedRank = 3
     notExpectedRank = 2*inputOSRank
 
-    print("\nTest OS-rank with expected value from sorted linked list:")
+    print("\nTest OS-rank with expected value (",expectedRank, ") from sorted linked list:")
     evenLengthList.testOSRank(inputOSRank, expectedRank)
-    print("\nTest OS-rank with NOT expected value from sorted linked list:")
+    print("\nTest OS-rank with NOT expected value (",notExpectedRank,") from sorted linked list:")
     evenLengthList.testOSRank(inputOSRank, notExpectedRank)
 
+def testOSLinkedList():
+    # Test values
+    maxElement = 100
+    minElement = 1
+
+
+    # Tests OS implementations with specific sorted linked list
+    print("\n--------OS test for NOT sorted linked list--------\n")
+    linkedList = LinkedList()
+
+    print("\n Min e Max element expected are:",minElement,"and ",maxElement,"\n")
+    # Insert max and min value into the list
+    linkedList.addElement(maxElement)
+    linkedList.addElement(minElement)
+
+    print("\nList :\n")
+    for i in range(random.randint(20, 100)):
+        linkedList.addElement(random.randint(minElement, maxElement))
+    # The max and min inserted from keyboard into list are inside it, so we can test finding
+    linkedList.printList()
+
+    # Test max and min values
+    linkedList.testMinSearching(minElement)
+    linkedList.testMaxSearching(maxElement)
 
 if __name__ == "__main__":
     # FIXME remove comments
-    #testLinkedList()
-    #testOSSortedLinkedList()
-    testSortedLinkedList()
+    # Test lists
+    linkedList = LinkedList()
+    testLinkedList(linkedList)
+    sortedList = SortedLinkedList()
+    testLinkedList(sortedList)
+
+    # Test OS for each list
+    testOSLinkedList()
+    testOSSortedLinkedList()

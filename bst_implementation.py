@@ -46,6 +46,7 @@ class BST:
         else:
             prev.right = newNode
 
+    # TODO remove if not useful
     def treeSearch(self,value):
         currentNode = self.root
         while currentNode is not None:
@@ -123,6 +124,14 @@ class BST:
             y.left = node.left
             y.left.parent = y
 
+    # Finds k-th smallest value
+    def osSelect(self,root,k):
+        currentNode = self.treeMinimum(root)
+
+        for i in range(k-1):
+            currentNode = self.nodeSuccessor(currentNode)
+        return currentNode
+
 
 
 albero = BST()
@@ -145,6 +154,8 @@ print("il max è: ", albero.treeMaximum(albero.root).value)
 print("il min è: ", albero.treeMinimum(albero.root).value)
 
 print("\nil predecessore di 40: ", albero.nodePredecessor(albero.searchNode(40)).value)
+
+print("il 3 valore più piccolo è ", albero.osSelect(albero.root,3).value)
 #print("nodo 40 :",albero.searchNode(40).value)
 #albero.treeDelete(albero.searchNode(40))
 #albero.inorderTraversal(albero.root)

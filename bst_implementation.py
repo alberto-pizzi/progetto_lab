@@ -20,6 +20,7 @@ class BST:
             print(root.value, end=' ')
             self.inorderTraversal(root.left)
             self.inorderTraversal(root.right)
+
     def postorderTraversal(self, root):
         if root is not None:
             self.inorderTraversal(root.left)
@@ -77,7 +78,7 @@ class BST:
             currentNode = currentNode.right
         return currentNode
 
-    def treeSuccessor(self, subRoot):
+    def nodeSuccessor(self, subRoot):
         currentNode = subRoot
         if currentNode.right is not None:
             return self.treeMinimum(currentNode.right)
@@ -86,7 +87,8 @@ class BST:
             currentNode = prev
             prev = prev.parent
         return prev
-    def treePredecessor(self, subRoot):
+
+    def nodePredecessor(self, subRoot):
         currentNode = subRoot
         if currentNode.left is not None:
             return self.treeMaximum(currentNode.left)
@@ -95,6 +97,7 @@ class BST:
             currentNode = prev
             prev = prev.parent
         return prev
+
     def transplant(self, oldRoot, newRoot):
         if oldRoot.parent is None:
             self.root = newRoot
@@ -105,7 +108,7 @@ class BST:
         if newRoot is not None:
             newRoot.parent = oldRoot.parent
 
-    def treeDelete(self,node):
+    def deleteNode(self, node):
         if node.left is None:
             self.transplant(node, node.right)
         elif node.right is None:
@@ -141,7 +144,7 @@ print("60 è nel bst?",albero.treeSearch(60))
 print("il max è: ", albero.treeMaximum(albero.root).value)
 print("il min è: ", albero.treeMinimum(albero.root).value)
 
-print("\nil predecessore di 40: ", albero.treePredecessor(albero.searchNode(40)).value)
+print("\nil predecessore di 40: ", albero.nodePredecessor(albero.searchNode(40)).value)
 #print("nodo 40 :",albero.searchNode(40).value)
 #albero.treeDelete(albero.searchNode(40))
 #albero.inorderTraversal(albero.root)

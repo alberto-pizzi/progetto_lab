@@ -7,7 +7,7 @@ class BSTNode:
         self.value = value
         self.parent = None
 
-class BST:
+class BSTree:
     def __init__(self):
         self.root = None
 
@@ -258,7 +258,7 @@ class BST:
 
 def testBST():
     print("\n--------BST test--------\n")
-    bst = BST()
+    bst = BSTree()
     for i in range(random.randint(20, 100)):
         bst.insertElement(random.randint(0, 1000))
     print("\n--Inorder traversal--\n")
@@ -292,7 +292,7 @@ def testBST():
 def testOSBST():
     # Tests OS implementations with specific BST
     print("\n--------OS test for BST--------\n")
-    bst = BST()
+    bst = BSTree()
 
     # Test values
     maxElement = 80
@@ -315,7 +315,7 @@ def testOSBST():
     medianExpectedFromOdd = 50
     medianNotExpected = 100
 
-    bst2 = BST()
+    bst2 = BSTree()
 
     bst2.insertElement(50)
     bst2.insertElement(30)

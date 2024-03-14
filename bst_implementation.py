@@ -1,4 +1,5 @@
 import numpy as np
+import random
 class BSTNode:
     def __init__(self,value):
         self.left = None
@@ -16,12 +17,14 @@ class BST:
             print(root.value, end=' ')
             self.inorderTraversal(root.right)
 
+    # TODO rimuovere se non serve
     def preorderTraversal(self, root):
         if root is not None:
             print(root.value, end=' ')
             self.inorderTraversal(root.left)
             self.inorderTraversal(root.right)
 
+    # TODO rimuovere se non serve
     def postorderTraversal(self, root):
         if root is not None:
             self.inorderTraversal(root.left)
@@ -80,6 +83,7 @@ class BST:
             currentNode = currentNode.right
         return currentNode
 
+    # TODO rimuovere se non serve
     def nodeSuccessor(self, node):
         currentNode = node
         if currentNode.right is not None:
@@ -100,6 +104,7 @@ class BST:
             prev = prev.parent
         return prev
 
+    # TODO rimuovere se non serve
     def transplant(self, oldRootNode, newRootNode):
         if oldRootNode.parent is None:
             self.root = newRootNode
@@ -110,6 +115,7 @@ class BST:
         if newRootNode is not None:
             newRootNode.parent = oldRootNode.parent
 
+    # TODO rimuovere se non serve
     def deleteNode(self, node):
         if node.left is None:
             self.transplant(node, node.right)
@@ -125,6 +131,7 @@ class BST:
             y.left = node.left
             y.left.parent = y
 
+    # TODO rimuovere se non serve
     # Finds k-th smallest value
     def osSelectSmallest(self,root,k):
         currentNode = self.treeMinimum(root)
@@ -135,6 +142,7 @@ class BST:
 
         return currentNode.value
 
+    # TODO rimuovere se non serve
     # Finds k-th biggest value
     def osSelectBiggest(self,root,k):
         currentNode = self.treeMaximum(root)
@@ -221,7 +229,45 @@ class BST:
             mid = (totalNodes + 1) // 2
             return self.osSelect(self.root, mid).value
 
-albero = BST()
+def testBST():
+    print("\n--------BST test--------\n")
+    bst = BST()
+    for i in range(random.randint(20, 100)):
+        bst.insertElement(random.randint(0, 1000))
+    print("\n--Inorder traversal--\n")
+    bst.inorderTraversal(bst.root)
+
+    # TODO rimuovere questi test e i metodi che non sono necessari per i veir test
+
+    print("\n--Child nodes test--\n")
+    if bst.size(bst.root) >= 3:
+        if bst.root.value > bst.root.left.value and bst.root.value <= bst.root.right.value:
+            print("Correct comparing, Parent > Left Child and Parent <= Right Child")
+        else:
+            print("Wrong comparing")
+
+
+    print("\n--Insert test--\n")
+    currentTotalNodes = bst.size(bst.root)
+    bst.insertElement(40)
+    if bst.size(bst.root) == (currentTotalNodes + 1):
+        print("Correct insert")
+    else:
+        print("Wrong insert")
+
+    print("\n--Delete test--\n")
+    bst.deleteNode(bst.searchNode(40))
+    if bst.size(bst.root) == (currentTotalNodes - 1):
+        print("Correct delete")
+    else:
+        print("Wrong delete")
+
+
+
+
+
+
+#albero = BST()
 """
 albero.insertElement(50)
 albero.insertElement(30)
@@ -242,7 +288,7 @@ print("il max è: ", albero.treeMaximum(albero.root).value)
 print("il min è: ", albero.treeMinimum(albero.root).value)
 
 print("\nil predecessore di 40: ", albero.nodePredecessor(albero.searchNode(40)).value)
-"""
+
 array1 = np.arange(0, 100, 13)
 # np.random.shuffle(array1)
 for value in array1:
@@ -258,4 +304,6 @@ print("trova mediana:",albero.median())
 #print("nodo 40 :",albero.searchNode(40).value)
 #albero.treeDelete(albero.searchNode(40))
 #albero.inorderTraversal(albero.root)
-
+"""
+if __name__ == "__main__":
+    testBST()

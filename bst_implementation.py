@@ -127,25 +127,30 @@ class BST:
     # Finds k-th smallest value
     def osSelectSmallest(self,root,k):
         currentNode = self.treeMinimum(root)
-
         for i in range(k-1):
             currentNode = self.nodeSuccessor(currentNode)
-        return currentNode
+        if currentNode is None:
+            return None
+        return currentNode.value
 
     # Finds k-th biggest value
     def osSelectBiggest(self,root,k):
         currentNode = self.treeMaximum(root)
-
         for i in range(k-1):
             currentNode = self.nodePredecessor(currentNode)
-        return currentNode
+        if currentNode is None:
+            return None
+        return currentNode.value
 
+    # TODO rimuovere se non si usa
     def size(self,root):
         if root is None:
             return 0
         return self.size(root.left) + self.size(root.right) + 1
 
-    # FIXME per i valori non presente restituisce il rango più alto, invece di None
+
+
+    """
     def osRank(self,root,target):
         if root is None:
             return 0
@@ -157,7 +162,7 @@ class BST:
             return self.size(root.left) + 1
     # TODO vedre quali delle due implementazioni è la migliore
     # FIXME per i valori non presente restituisce il rango più alto, invece di None
-"""    def osRank(self,root,target):
+    def osRank(self,root,target):
         if root is None:
             return 0
 
@@ -169,8 +174,19 @@ class BST:
         else:
             return rankLeft + rankRight"""
 
+    # FIXME per i valori non presente restituisce il rango più alto, invece di None
+    def osRank(self,node,target):
+        if node is None:
+            return 0
+        successor = self.nodeSuccessor(self.treeMinimum(self.root))
+        rank = 1
+        while successor is not None and successor.value <= target:
+            rank += 1
+            successor = self.nodeSuccessor(successor)
+        return rank
 
 albero = BST()
+
 albero.insertElement(50)
 albero.insertElement(30)
 albero.insertElement(20)
@@ -191,9 +207,10 @@ print("il min è: ", albero.treeMinimum(albero.root).value)
 
 print("\nil predecessore di 40: ", albero.nodePredecessor(albero.searchNode(40)).value)
 
-print("il 3 valore più piccolo è ", albero.osSelectSmallest(albero.root,3).value)
+print("il 7 valore più piccolo è ", albero.osSelectSmallest(albero.root,7))
 
-print("il rango di 70 è: ", albero.osRank(albero.root,100))
+
+print("il rango di 20 è: ", albero.osRank(albero.root,20))
 #print("nodo 40 :",albero.searchNode(40).value)
 #albero.treeDelete(albero.searchNode(40))
 #albero.inorderTraversal(albero.root)

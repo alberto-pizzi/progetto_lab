@@ -71,13 +71,13 @@ class BST:
                 currentNode = currentNode.right
         return currentNode
 
-    def treeMinimum(self, node):
+    def nodeMinimum(self, node):
         currentNode = node
         while currentNode.left is not None:
             currentNode = currentNode.left
         return currentNode
 
-    def treeMaximum(self, node):
+    def nodeMaximum(self, node):
         currentNode = node
         while currentNode.right is not None:
             currentNode = currentNode.right
@@ -87,7 +87,7 @@ class BST:
     def nodeSuccessor(self, node):
         currentNode = node
         if currentNode.right is not None:
-            return self.treeMinimum(currentNode.right)
+            return self.nodeMinimum(currentNode.right)
         prev = currentNode.parent
         while prev is not None and currentNode is prev.right:
             currentNode = prev
@@ -97,7 +97,7 @@ class BST:
     def nodePredecessor(self, node):
         currentNode = node
         if currentNode.left is not None:
-            return self.treeMaximum(currentNode.left)
+            return self.nodeMaximum(currentNode.left)
         prev = currentNode.parent
         while prev is not None and currentNode is prev.left:
             currentNode = prev
@@ -122,7 +122,7 @@ class BST:
         elif node.right is None:
             self.transplant(node, node.left)
         else:
-            y = self.treeMinimum(node.right)
+            y = self.nodeMinimum(node.right)
             if y.parent is not node:
                 self.transplant(y, y.right)
                 y.right = node.right
@@ -134,7 +134,7 @@ class BST:
     # TODO rimuovere se non serve
     # Finds k-th smallest value
     def osSelectSmallest(self,root,k):
-        currentNode = self.treeMinimum(root)
+        currentNode = self.nodeMinimum(root)
         for i in range(k-1):
             if currentNode is None:
                 return None
@@ -145,7 +145,7 @@ class BST:
     # TODO rimuovere se non serve
     # Finds k-th biggest value
     def osSelectBiggest(self,root,k):
-        currentNode = self.treeMaximum(root)
+        currentNode = self.nodeMaximum(root)
         for i in range(k-1):
             if currentNode is None:
                 return None
@@ -228,6 +228,33 @@ class BST:
         else:
             mid = (totalNodes + 1) // 2
             return self.osSelect(self.root, mid).value
+    def testMinSearching(self,expectedValue):
+        if (self.nodeMinimum(self.root).value == expectedValue):
+            print("\nMin finding is right. Min is ", expectedValue)
+        else:
+            print("\nMin finding is wrong")
+    def testMaxSearching(self,expectedValue):
+        if (self.nodeMaximum(self.root).value == expectedValue):
+            print("\nMax finding is right. Min is ", expectedValue)
+        else:
+            print("\nMax finding is wrong")
+
+    def testMedian(self,valueExpected):
+        if self.median() == valueExpected:
+            print("Median expected is right, that is", valueExpected)
+        else:
+            print("Median expected is wrong")
+    def testOSSelect(self,inputOSSelect,valueExpected):
+        if self.osSelect(self.root,inputOSSelect).value == valueExpected:
+            print("The result is right, that is", valueExpected)
+        else:
+            print("The result is wrong")
+    def testOSRank(self, inputOSRank, valueExpected):
+        if self.osRank(inputOSRank) == valueExpected:
+            print("The result (rank) is right, that is", valueExpected)
+        else:
+            print("The result (rank) is wrong")
+
 
 def testBST():
     print("\n--------BST test--------\n")
@@ -262,8 +289,77 @@ def testBST():
     else:
         print("Wrong delete")
 
+def testOSBST():
+    # Tests OS implementations with specific BST
+    print("\n--------OS test for BST--------\n")
+    bst = BST()
+
+    # Test values
+    maxElement = 80
+    minElement = 20
+
+    for i in range(random.randint(20, 50)):
+        bst.insertElement(random.randint(minElement+1, maxElement-1))
+    bst.insertElement(minElement)
+    bst.insertElement(maxElement)
+
+    print("\n--Inorder traversal--\n")
+    bst.inorderTraversal(bst.root)
+
+    bst.testMaxSearching(maxElement)
+    bst.testMinSearching(minElement)
 
 
+    # Test values
+    medianExpectedFromEven = 45
+    medianExpectedFromOdd = 50
+    medianNotExpected = 100
+
+    bst2 = BST()
+
+    bst2.insertElement(50)
+    bst2.insertElement(30)
+    bst2.insertElement(20)
+    bst2.insertElement(40)
+    bst2.insertElement(70)
+    bst2.insertElement(60)
+
+    print("\n--Inorder traversal--\n")
+    bst2.inorderTraversal(bst2.root)
+
+    print("\nTests median from even nodes BST:")
+    bst2.testMedian(medianExpectedFromEven)
+    bst2.insertElement(80)
+    print("\n--Inorder traversal with new element, now we have odd number of nodes--\n")
+    bst2.inorderTraversal(bst2.root)
+    print("\nTests median from odd nodes BST:")
+    bst2.testMedian(medianExpectedFromOdd)
+    print("\nTests median from odd nodes BST with UNEXPECTED value:")
+    bst2.testMedian(medianNotExpected)
+
+
+    # Test values
+
+    # Tests OS-select
+    inputOSSelect = 3
+    expectedValue = 40
+    notExpectedValue = 2*expectedValue
+
+    print("\nTest OS-select with expected value (",expectedValue,") from BST:")
+    bst2.testOSSelect(inputOSSelect, expectedValue)
+    print("\nTest OS-select with NOT expected value (",notExpectedValue,") from BST:")
+    bst2.testOSSelect(inputOSSelect, notExpectedValue)
+
+    # Tests OS-rank (return position, rank, of value)
+
+    inputOSRank = bst2.searchNode(40)
+    expectedRank = 3
+    notExpectedRank = 2*expectedRank
+
+    print("\nTest OS-rank with expected value (",expectedRank, ") from sorted linked list:")
+    bst2.testOSRank(inputOSRank, expectedRank)
+    print("\nTest OS-rank with NOT expected value (",notExpectedRank,") from sorted linked list:")
+    bst2.testOSRank(inputOSRank, notExpectedRank)
 
 
 
@@ -307,3 +403,4 @@ print("trova mediana:",albero.median())
 """
 if __name__ == "__main__":
     testBST()
+    testOSBST()

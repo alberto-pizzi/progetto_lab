@@ -5,34 +5,6 @@ from timeit import default_timer as timer
 import bst_implementation as BST
 import random
 
-#TODO da rimuovere
-def prova():
-    # Seno e coseno
-    x = np.arange(0, 3 * np.pi, 0.1)
-    y_sin = np.sin(x)
-    y_cos = np.cos(x)
-    # usiamo matplotlib
-    plt.plot(x, y_sin)
-    plt.plot(x, y_cos)
-    plt.xlabel("x axis label")
-    plt.ylabel("y axis label")
-    plt.title("Sine and Cosine")
-    plt.legend(["Sine", "Cosine"])
-    #plt.savefig("prova.png")
-    plt.show()
-
-def prova2():
-    x = (10,20,30,40,50)
-    y = (4,2,3,1,5)
-    # usiamo matplotlib
-    plt.plot(x, y)
-    plt.xlabel("x axis label")
-    plt.ylabel("y axis label")
-    plt.title("Prova nuova")
-    plt.legend(["Primo"])
-    #plt.savefig("prova.png")
-    plt.show()
-
 def generateRandomValues(totalValues, minRandomValue, maxRandomValue):
     randomValues = []
     for i in range(totalValues):
@@ -66,10 +38,29 @@ def searchMaxBSTTest(values):
     time = end - start
     return (time/len(values))
 
+def drawGraph(graphTitle, xValues, yBstValues, yLinkedListValues):
+    graph = plt.figure()
+    plt.title(graphTitle)
+    plt.xlabel("Numero di elementi")
+    plt.ylabel("Tempi")
+    plt.plot(xValues, yBstValues, color='red', label='ABR')
+    plt.plot(xValues, yLinkedListValues, color='blue', label='Lista Ordinata')
+    plt.legend()
+    return graph
+
+
+
 
 if __name__ == "__main__":
     #prova2()
 
+    x = (10,20,30,40,50)
+    y = (4,2,3,1,5)
+    y1 = (7,3,5,4,10)
+    graph = drawGraph("prova funzione", x, y, y1)
+    graph.show()
+
+    """
     tempiFinali = []
     n = 20
     for i in range(n):
@@ -87,7 +78,7 @@ if __name__ == "__main__":
     tempiFinali = np.divide(tempiFinali, n)
     print("\n",tempiFinali)
 
-    """
+    
     #prova somma matrice 1
     tempiFinali = []
     for i in range(5):

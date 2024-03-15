@@ -76,7 +76,7 @@ def runAllTests():
     # FIXME
     n = 30
     x = [50, 250, 1000, 5000]
-    finalTimes = np.empty((n,2))
+    finalTimes = np.array([])
     for j in x:
         values = generateRandomValues(j,1,100)
         timesMaxTests = []
@@ -84,11 +84,11 @@ def runAllTests():
             print("\nTest: ",i+1,"with ",j," elements")
             timesMaxTest = searchMaxTests(values)
             timesMaxTests.append(timesMaxTest)
-        timesMaxTests = np.sum([timesMaxTests], axis=0)
+        timesMaxTests = np.sum(timesMaxTests, axis=0)
         timesMaxTests = np.divide(timesMaxTests, n)
-        #finalTimes.append(timesMaxTests)
         finalTimes = np.append(finalTimes, timesMaxTests)
 
+    finalTimes = finalTimes.reshape(len(x), 2)
     print("\nfinalTimes:\n",finalTimes)
     finalTimesBST = finalTimes[:, :1]
     finalTimesSLL = finalTimes[:, 1:]

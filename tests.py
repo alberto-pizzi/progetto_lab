@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from timeit import default_timer as timer
 import bst_implementation as BST
+import lists_implementation as LL
 import random
 
 def generateRandomValues(totalValues, minRandomValue, maxRandomValue):
@@ -23,7 +24,7 @@ def generateDecreasingValues(maxValue, minValue):
         values.append(i)
     return values
 
-#FIXME verificare se serve il tempo medio (vidivendo per la lunghezza della lista)
+# FIXME rivedere se devo dividere per il numero di elementi
 def searchMaxBSTTest(values):
     # Create BST with input values
     newBST = BST.BSTree()
@@ -48,17 +49,65 @@ def drawGraph(graphTitle, xValues, yBstValues, yLinkedListValues):
     plt.legend()
     return graph
 
+def saveGraph(nameFile,graph):
+    directory = "Graphs/" + nameFile + ".png"
+    graph.savefig(directory)
 
+def searchMaxSLLTest(values):
+    newSortedList = LL.SortedLinkedList()
+    for i in values:
+        newSortedList.addElement(i)
+
+    start = timer()
+    maxSLL = newSortedList.maxElement()
+    end = timer()
+    time = end - start
+    return (time/len(values))
+
+def searchMaxTests(values):
+    #print('\nSearching Max in BST test:\n')
+    timeBST = searchMaxBSTTest(values)
+    #print('\nSearching Max in Sorted Linked List test:\n')
+    timeSLL = searchMaxSLLTest(values)
+    times = [timeBST, timeSLL]
+    return times
+
+def runAllTests():
+    # FIXME
+    n = 30
+    x = [50, 250, 1000, 5000]
+    finalTimes = np.empty((n,2))
+    for j in x:
+        values = generateRandomValues(j,1,100)
+        timesMaxTests = []
+        for i in range(n):
+            print("\nTest: ",i+1,"with ",j," elements")
+            timesMaxTest = searchMaxTests(values)
+            timesMaxTests.append(timesMaxTest)
+        timesMaxTests = np.sum([timesMaxTests], axis=0)
+        timesMaxTests = np.divide(timesMaxTests, n)
+        #finalTimes.append(timesMaxTests)
+        finalTimes = np.append(finalTimes, timesMaxTests)
+
+    print("\nfinalTimes:\n",finalTimes)
+    finalTimesBST = finalTimes[:, :1]
+    finalTimesSLL = finalTimes[:, 1:]
+    print("\n Tempi BST:",finalTimesBST)
+    print("\n Tempi SLL:", finalTimesSLL)
+    graph = drawGraph("Ricerca Max",x,finalTimesBST,finalTimesSLL)
+    graph.show()
 
 
 if __name__ == "__main__":
     #prova2()
+    runAllTests()
 
-    x = (10,20,30,40,50)
+    """x = (10,20,30,40,50)
     y = (4,2,3,1,5)
     y1 = (7,3,5,4,10)
-    graph = drawGraph("prova funzione", x, y, y1)
-    graph.show()
+    graph1 = drawGraph("prova funzione", x, y, y1)
+    graph1.show()"""
+
 
     """
     tempiFinali = []

@@ -5,6 +5,7 @@ from timeit import default_timer as timer
 import bst_implementation as BST
 import lists_implementation as LL
 import random
+import math
 
 def generateRandomValues(totalValues, minRandomValue, maxRandomValue):
     randomValues = []
@@ -30,22 +31,38 @@ def searchMaxBSTTest(values):
     newBST = BST.BSTree()
     for i in values:
         newBST.insertElement(i)
-
-
     #print("\n")
     start = timer()
     maxBST = newBST.nodeMaximum(newBST.root).value
     end = timer()
     time = end - start
-    return (time/len(values))
+    return time/len(values)
+
+
+def searchMinBSTTest(values):
+    # Create BST with input values
+    newBST = BST.BSTree()
+    for i in values:
+        newBST.insertElement(i)
+    start = timer()
+    minBST = newBST.nodeMinimum(newBST.root).value
+    end = timer()
+    time = end-start
+    return time/len(values)
 
 def drawGraph(graphTitle, xValues, yBstValues, yLinkedListValues):
+    # FIXME
     graph = plt.figure()
     plt.title(graphTitle)
+    ultimoEl = yLinkedListValues[len(yLinkedListValues)-1]
+    plt.ylim(0,ultimoEl*8)
+    #plt.xlim(0,500)
+    #ylog= np.log2(rif)
     plt.xlabel("Numero di elementi")
     plt.ylabel("Tempi")
     plt.plot(xValues, yBstValues, color='red', label='ABR')
     plt.plot(xValues, yLinkedListValues, color='blue', label='Lista Ordinata')
+    #plt.plot(xValues,rif,color='green',label = 'Rif log2')
     plt.legend()
     return graph
 
@@ -64,6 +81,17 @@ def searchMaxSLLTest(values):
     time = end - start
     return (time/len(values))
 
+def searchMinSLLTest(values):
+    newSortedList = LL.SortedLinkedList()
+    for i in values:
+        newSortedList.addElement(i)
+
+    start = timer()
+    minSLL = newSortedList.minElement()
+    end = timer()
+    time = end-start
+    return time/len(values)
+
 def searchMaxTests(values):
     #print('\nSearching Max in BST test:\n')
     timeBST = searchMaxBSTTest(values)
@@ -71,18 +99,25 @@ def searchMaxTests(values):
     timeSLL = searchMaxSLLTest(values)
     times = [timeBST, timeSLL]
     return times
+def searchMinTests(values):
+    #print('\nSearching Max in BST test:\n')
+    timeBST = searchMinBSTTest(values)
+    #print('\nSearching Max in Sorted Linked List test:\n')
+    timeSLL = searchMinSLLTest(values)
+    times = [timeBST, timeSLL]
+    return times
 
 def runAllTests():
     # FIXME
-    n = 30
-    x = [50, 250, 1000, 5000]
+    n = 100
+    x = [50,100,150,200,250,300,400,500]
     finalTimes = np.array([])
     for j in x:
-        values = generateRandomValues(j,1,100)
+        values = generateRandomValues(j,1,100000)
         timesMaxTests = []
         for i in range(n):
             print("\nTest: ",i+1,"with ",j," elements")
-            timesMaxTest = searchMaxTests(values)
+            timesMaxTest = searchMinTests(values)
             timesMaxTests.append(timesMaxTest)
         timesMaxTests = np.sum(timesMaxTests, axis=0)
         timesMaxTests = np.divide(timesMaxTests, n)
@@ -94,7 +129,7 @@ def runAllTests():
     finalTimesSLL = finalTimes[:, 1:]
     print("\n Tempi BST:",finalTimesBST)
     print("\n Tempi SLL:", finalTimesSLL)
-    graph = drawGraph("Ricerca Max",x,finalTimesBST,finalTimesSLL)
+    graph = drawGraph("Ricerca Min",x,finalTimesBST,finalTimesSLL)
     graph.show()
 
 
@@ -107,6 +142,7 @@ if __name__ == "__main__":
     y1 = (7,3,5,4,10)
     graph1 = drawGraph("prova funzione", x, y, y1)
     graph1.show()"""
+
 
 
     """
@@ -141,6 +177,7 @@ if __name__ == "__main__":
     tempiFinali = np.sum(tempiFinali, axis=0)
     print("\n",tempiFinali)
     """
+
 
     """
     #prova somma matrice 1

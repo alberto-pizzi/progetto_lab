@@ -117,7 +117,7 @@ class SortedLinkedList(LinkedList):
 
     # Returns min element from sorted list (growing way)
     def minElement(self):
-        if not self.head:
+        if self.head is None:
             return None
         else:
             return self.head.value

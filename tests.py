@@ -57,17 +57,63 @@ def searchMaxBSTTest(values):
     newBST = BST.BSTree()
     for i in values:
         newBST.insertElement(i)
-    newBST.inorderTraversal(newBST.root)
-    print("\n")
+
+
+    #print("\n")
     start = timer()
     maxBST = newBST.nodeMaximum(newBST.root).value
     end = timer()
     time = end - start
-    return (time),maxBST
+    return (time/len(values))
 
 
 if __name__ == "__main__":
     #prova2()
-    print("time random: ",searchMaxBSTTest(generateRandomValues(20,1,100)))
-    print("\ntime: ",searchMaxBSTTest(generateIncreasingValues(1,20)))
-    print("\ntime: ",searchMaxBSTTest(generateDecreasingValues(20,1)))
+
+    tempiFinali = []
+    n = 20
+    for i in range(n):
+        #print("-----",i,"-----")
+        tempi = []
+        tempi.append(searchMaxBSTTest(generateRandomValues(20,1,100)))
+        tempi.append(searchMaxBSTTest(generateIncreasingValues(1,20)))
+        tempi.append(searchMaxBSTTest(generateDecreasingValues(20,1)))
+        tempiFinali.append(tempi)
+    print("\n", tempiFinali)
+    tempiFinali = np.sum(tempiFinali, axis=0)
+    print("\n",tempiFinali)
+
+    print("\n---Valori Finali---\n")
+    tempiFinali = np.divide(tempiFinali, n)
+    print("\n",tempiFinali)
+
+    """
+    #prova somma matrice 1
+    tempiFinali = []
+    for i in range(5):
+        # print("-----",i,"-----")
+        tempi = []
+        tempi.append(i)
+        tempi.append(i+1)
+        tempi.append(i+2)
+        tempiFinali.append(tempi)
+    print("\n", tempiFinali)
+    tempiFinali = np.sum(tempiFinali, axis=0)
+    print("\n",tempiFinali)
+    """
+
+    """
+    #prova somma matrice 1
+    finali= []
+
+    for i in range(5):
+        times = []
+        for j in range(5):
+            times.append(j)
+        finali.append(times)
+    print(finali)
+
+    finali = np.sum(finali,axis=0)
+    print(finali)
+    finali = np.divide(finali,5)
+    print(finali)"""

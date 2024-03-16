@@ -7,9 +7,9 @@ import lists_implementation as LL
 import random
 import math
 
-def generateRandomValues(totalValues, minRandomValue, maxRandomValue):
+def generateRandomValues(start,totalValues, minRandomValue, maxRandomValue):
     randomValues = []
-    for i in range(totalValues):
+    for i in range(start,totalValues):
          randomValues.append(random.randint(minRandomValue,maxRandomValue))
     return randomValues
 
@@ -48,14 +48,14 @@ def searchMinBSTTest(values):
     minBST = newBST.nodeMinimum(newBST.root).value
     end = timer()
     time = end-start
-    return time/len(values)
+    return time
 
 def drawGraph(graphTitle, xValues, yBstValues, yLinkedListValues):
     # FIXME
     graph = plt.figure()
     plt.title(graphTitle)
-    ultimoEl = yLinkedListValues[len(yLinkedListValues)-1]
-    plt.ylim(0,ultimoEl*8)
+    ultimoEl = np.max(yBstValues)
+    #plt.ylim(0,ultimoEl*2)
     #plt.xlim(0,500)
     #ylog= np.log2(rif)
     plt.xlabel("Numero di elementi")
@@ -90,7 +90,7 @@ def searchMinSLLTest(values):
     minSLL = newSortedList.minElement()
     end = timer()
     time = end-start
-    return time/len(values)
+    return time
 
 def searchMaxTests(values):
     #print('\nSearching Max in BST test:\n')
@@ -110,10 +110,14 @@ def searchMinTests(values):
 def runAllTests():
     # FIXME
     n = 100
-    x = [50,100,150,200,250,300,400,500]
+    x = [g for g in range(50,2000,50)]
+    prev = 0
     finalTimes = np.array([])
+    values = []
     for j in x:
-        values = generateRandomValues(j,1,100000)
+        values.extend(generateRandomValues(prev,j,1,2000))
+        prev = j
+        #values = generateDecreasingValues(j,1)
         timesMaxTests = []
         for i in range(n):
             print("\nTest: ",i+1,"with ",j," elements")

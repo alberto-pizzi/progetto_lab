@@ -31,6 +31,13 @@ class BSTree:
             self.inorderTraversal(root.right)
             print(root.value, end=' ')
 
+    def height(self, node):
+        if node is None:
+            return 0
+        left = self.height(node.left)
+        right = self.height(node.right)
+        return max(left, right) + 1
+
     def insertElement(self,value):
         newNode = BSTNode(value)
         if self.root is None:
@@ -404,3 +411,32 @@ print("trova mediana:",albero.median())
 if __name__ == "__main__":
     testBST()
     testOSBST()
+
+    """
+    albero = BSTree()
+
+    albero.insertElement(50)
+    albero.insertElement(30)
+    albero.insertElement(20)
+    albero.insertElement(40)
+    albero.insertElement(70)
+    albero.insertElement(60)
+    albero.insertElement(80)
+
+    alt = albero.height(albero.root)
+    print("\naltezza: ", alt)
+    #array1 = np.arange(0, 1000, 13)
+    
+    array1 = [i for i in range(100,0,-1)]
+    #np.random.shuffle(array1)
+
+    albero = BSTree()
+    c=0
+    for value in array1:
+        albero.insertElement(value)
+        c += 1
+
+    #alt = albero.altezza(albero.root)
+    print("\ncontatore: ",c)
+    print("\naltezza: ", alt)
+    #albero.inorderTraversal(albero.root)"""

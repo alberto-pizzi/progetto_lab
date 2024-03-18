@@ -31,6 +31,16 @@ class BSTree:
             self.inorderTraversal(root.right)
             print(root.value, end=' ')
 
+    def sortedArrayToBalancedTree(self, a):
+        if not a:
+            return None
+        mid = len(a) // 2
+        root = BSTNode(a[mid])
+        root.left = self.sortedArrayToBalancedTree(a[:mid])
+        root.right = self.sortedArrayToBalancedTree(a[mid + 1:])
+        return root
+
+
     def height(self, node):
         if node is None:
             return 0

@@ -110,16 +110,15 @@ def searchMinTests(values):
 def runAllTests():
     # FIXME
     n = 100
-    x = [g for g in range(50,2000,50)]
-    prev = 0
+    #x = [g for g in range(200,2000,200)]
+    x = [50,250,500,1000,5000,10000]
     finalTimes = np.array([])
-    values = []
     for j in x:
-        values.extend(generateRandomValues(prev,j,1,2000))
-        prev = j
-        #values = generateDecreasingValues(j,1)
         timesMaxTests = []
         for i in range(n):
+            values = []
+            values = generateRandomValues(0,j,1,10000)
+            #values = generateDecreasingValues(j,1)
             print("\nTest: ",i+1,"with ",j," elements")
             timesMaxTest = searchMinTests(values)
             timesMaxTests.append(timesMaxTest)

@@ -36,7 +36,7 @@ def searchMaxBSTTest(values):
     maxBST = newBST.nodeMaximum(newBST.root).value
     end = timer()
     time = end - start
-    return time/len(values)
+    return time
 
 
 def searchMinBSTTest(values):
@@ -50,12 +50,26 @@ def searchMinBSTTest(values):
     time = end-start
     return time
 
+def osRankBSTTest(values, targetValue):
+    # Create BST with input values
+    newBST = BST.BSTree()
+    for i in values:
+        newBST.insertElement(i)
+    nodeTarget = newBST.searchNode(targetValue)
+
+    start = timer()
+    rank = newBST.osRank(nodeTarget)
+    end = timer()
+    time = end-start
+    return time
+
 def drawGraph(graphTitle, xValues, yBstValues, yLinkedListValues):
     # FIXME
     graph = plt.figure()
     plt.title(graphTitle)
+   #fig,ax=plt.subplots()
     ultimoEl = np.max(yBstValues)
-    #plt.ylim(0,ultimoEl*2)
+    plt.ylim(0,ultimoEl*3)
     #plt.xlim(0,500)
     #ylog= np.log2(rif)
     plt.xlabel("Numero di elementi")
@@ -64,6 +78,15 @@ def drawGraph(graphTitle, xValues, yBstValues, yLinkedListValues):
     plt.plot(xValues, yLinkedListValues, color='blue', label='Lista Ordinata')
     #plt.plot(xValues,rif,color='green',label = 'Rif log2')
     plt.legend()
+
+    """
+    x1 = xValues[:2]
+    y1 = yBstValues[:2]
+    zm = ax.inset_axes([0.1, 0.1, 0.8, 0.8])
+    zm.plot(x1,y1)
+    zm.indicate_inset_zoom(zm,edgecolor='green',lw=7)
+    """
+
     return graph
 
 def saveGraph(nameFile,graph):
@@ -79,7 +102,7 @@ def searchMaxSLLTest(values):
     maxSLL = newSortedList.maxElement()
     end = timer()
     time = end - start
-    return (time/len(values))
+    return time
 
 def searchMinSLLTest(values):
     newSortedList = LL.SortedLinkedList()
@@ -88,6 +111,18 @@ def searchMinSLLTest(values):
 
     start = timer()
     minSLL = newSortedList.minElement()
+    end = timer()
+    time = end-start
+    return time
+
+def osRankSLLTest(values, targetValue):
+    newSortedList = LL.SortedLinkedList()
+    for i in values:
+        newSortedList.addElement(i)
+    nodeTarget = newSortedList.searchNode(targetValue)
+
+    start = timer()
+    rank = newSortedList.osRank(nodeTarget)
     end = timer()
     time = end-start
     return time
@@ -107,6 +142,19 @@ def searchMinTests(values):
     times = [timeBST, timeSLL]
     return times
 
+def searchOSRankTests(values):
+
+    randomTarget = random.choice(values)
+
+    #print('\nSearching Max in BST test:\n')
+    timeBST = osRankBSTTest(values,randomTarget)
+    #print('\nSearching Max in Sorted Linked List test:\n')
+    timeSLL = searchMinSLLTest(values)
+    times = [timeBST, timeSLL]
+    return times
+
+
+
 def runAllTests():
     # FIXME
     n = 100
@@ -120,7 +168,7 @@ def runAllTests():
             values = generateRandomValues(0,j,1,10000)
             #values = generateDecreasingValues(j,1)
             print("\nTest: ",i+1,"with ",j," elements")
-            timesMaxTest = searchMinTests(values)
+            timesMaxTest = searchMaxTests(values)
             timesMaxTests.append(timesMaxTest)
         timesMaxTests = np.sum(timesMaxTests, axis=0)
         timesMaxTests = np.divide(timesMaxTests, n)
@@ -132,7 +180,7 @@ def runAllTests():
     finalTimesSLL = finalTimes[:, 1:]
     print("\n Tempi BST:",finalTimesBST)
     print("\n Tempi SLL:", finalTimesSLL)
-    graph = drawGraph("Ricerca Min",x,finalTimesBST,finalTimesSLL)
+    graph = drawGraph("Ricerca Max",x,finalTimesBST,finalTimesSLL)
     graph.show()
 
 

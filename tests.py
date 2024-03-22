@@ -63,13 +63,26 @@ def osRankBSTTest(values, targetValue):
     time = end-start
     return time
 
+def osSelectBSTTest(values, iPos):
+    # Create BST with input values
+    newBST = BST.BSTree()
+    for i in values:
+        newBST.insertElement(i)
+
+    start = timer()
+    rank = newBST.osSelect(newBST.root,iPos)
+    end = timer()
+    time = end-start
+    return time
+
 def drawGraph(graphTitle, xValues, yBstValues, yLinkedListValues):
     # FIXME
     graph = plt.figure()
     plt.title(graphTitle)
    #fig,ax=plt.subplots()
     ultimoEl = np.max(yBstValues)
-    plt.ylim(0,ultimoEl*3)
+    #plt.ylim(0,ultimoEl*3)
+    plt.ylim(0, 0.001)
     #plt.xlim(0,500)
     #ylog= np.log2(rif)
     plt.xlabel("Numero di elementi")
@@ -119,10 +132,20 @@ def osRankSLLTest(values, targetValue):
     newSortedList = LL.SortedLinkedList()
     for i in values:
         newSortedList.addElement(i)
-    nodeTarget = newSortedList.searchNode(targetValue)
 
     start = timer()
-    rank = newSortedList.osRank(nodeTarget)
+    rank = newSortedList.osRank(targetValue)
+    end = timer()
+    time = end-start
+    return time
+
+def osSelectSLLTest(values, iPos):
+    newSortedList = LL.SortedLinkedList()
+    for i in values:
+        newSortedList.addElement(i)
+
+    start = timer()
+    rank = newSortedList.osSelect(iPos)
     end = timer()
     time = end-start
     return time
@@ -142,18 +165,23 @@ def searchMinTests(values):
     times = [timeBST, timeSLL]
     return times
 
-def searchOSRankTests(values):
-
+def oSRankTests(values):
     randomTarget = random.choice(values)
-
     #print('\nSearching Max in BST test:\n')
     timeBST = osRankBSTTest(values,randomTarget)
     #print('\nSearching Max in Sorted Linked List test:\n')
-    timeSLL = searchMinSLLTest(values)
+    timeSLL = osRankSLLTest(values,randomTarget)
     times = [timeBST, timeSLL]
     return times
 
-
+def oSSelectTests(values):
+    iPosition = random.randint(1,len(values))
+    #print('\nSearching Max in BST test:\n')
+    timeBST = osRankBSTTest(values,iPosition)
+    #print('\nSearching Max in Sorted Linked List test:\n')
+    timeSLL = osRankSLLTest(values,iPosition)
+    times = [timeBST, timeSLL]
+    return times
 
 def runAllTests():
     # FIXME
@@ -165,10 +193,10 @@ def runAllTests():
         timesMaxTests = []
         for i in range(n):
             values = []
-            values = generateRandomValues(0,j,1,10000)
-            #values = generateDecreasingValues(j,1)
+            #values = generateRandomValues(0,j,1,10000)
+            values = generateDecreasingValues(j,1)
             print("\nTest: ",i+1,"with ",j," elements")
-            timesMaxTest = searchMaxTests(values)
+            timesMaxTest = oSRankTests(values)
             timesMaxTests.append(timesMaxTest)
         timesMaxTests = np.sum(timesMaxTests, axis=0)
         timesMaxTests = np.divide(timesMaxTests, n)
@@ -180,7 +208,7 @@ def runAllTests():
     finalTimesSLL = finalTimes[:, 1:]
     print("\n Tempi BST:",finalTimesBST)
     print("\n Tempi SLL:", finalTimesSLL)
-    graph = drawGraph("Ricerca Max",x,finalTimesBST,finalTimesSLL)
+    graph = drawGraph("OS Rank",x,finalTimesBST,finalTimesSLL)
     graph.show()
 
 

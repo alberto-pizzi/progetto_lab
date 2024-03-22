@@ -1,5 +1,7 @@
 import numpy as np
 import random
+import sys
+sys.setrecursionlimit(10**9)
 class BSTNode:
     def __init__(self,value):
         self.left = None
@@ -16,6 +18,16 @@ class BSTree:
             self.inorderTraversal(root.left)
             print(root.value, end=' ')
             self.inorderTraversal(root.right)
+
+    # TODO remove
+    def calculateSize(self, subRoot):
+        if subRoot is not None:
+            left_child_count = self.calculateSize(subRoot.left)  # Attraversa il sottoalbero sinistro
+            right_child_count = self.calculateSize(subRoot.right)  # Attraversa il sottoalbero destro
+            total_children = left_child_count + right_child_count  # Somma il numero di figli
+            return total_children + 1  # Restituisce il numero totale di figli (incluse radice e foglie)
+        else:
+            return 0  # Se il nodo è None, non ha figli
 
     # TODO rimuovere se non serve
     def preorderTraversal(self, root):
@@ -174,7 +186,8 @@ class BSTree:
     def size(self,root):
         if root is None:
             return 0
-        return self.size(root.left) + self.size(root.right) + 1
+        else:
+            return self.size(root.left)+self.size(root.right)+1
 
     """
     def osRank(self,root,target):
@@ -212,15 +225,15 @@ class BSTree:
         return rank
 """
 
-    # Returns a node (pointer) with i-th smallest value
-    def osSelect(self,node,i):
-        rank = self.size(node.left) + 1
+    # Returns a node (pointer) with i-th smallest value, from a node
+    def osSelect(self, subRoot, i):
+        rank = self.size(subRoot.left) + 1
         if i == rank:
-            return node
+            return subRoot
         elif i < rank:
-            return self.osSelect(node.left, i)
+            return self.osSelect(subRoot.left, i)
         else:
-            return self.osSelect(node.right, i - rank)
+            return self.osSelect(subRoot.right, i - rank)
 
     # Returns the rank (number) of node
     def osRank(self, node):
@@ -419,10 +432,11 @@ print("trova mediana:",albero.median())
 #albero.inorderTraversal(albero.root)
 """
 if __name__ == "__main__":
-    testBST()
-    testOSBST()
+    #testBST()
+    #testOSBST()
 
-    """
+    # TODO abilitare i test
+
     albero = BSTree()
 
     albero.insertElement(50)
@@ -433,6 +447,11 @@ if __name__ == "__main__":
     albero.insertElement(60)
     albero.insertElement(80)
 
+    #albero.inorderTraversal(albero.root)
+
+    print("size: ",albero.calculateSize(albero.root.left))
+    print("size 50: ",albero.size(albero.searchNode(50)))
+    """
     alt = albero.height(albero.root)
     print("\naltezza: ", alt)
     #array1 = np.arange(0, 1000, 13)

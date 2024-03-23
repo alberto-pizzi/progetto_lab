@@ -250,7 +250,7 @@ h1 = Maxheap(10)
 h1.insert(2)
 h1.insert(10)
 h1.printHeap()
-"""
+
 
 h4 = Maxheap()
 #for i in range(10):
@@ -259,6 +259,7 @@ arr = [1,2,3,4,5,6,7,8,9,10]
 h4.buildHeap(arr)
 h4.printHeap()
 print(h4.heap[2])
+"""
 
 #print("\n Rango di 1: ")
 #print(h1.osRankNotOptimized(100))

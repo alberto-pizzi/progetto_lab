@@ -234,10 +234,12 @@ def osSelectSLLTest(values, iPos):
     return time
 
 def searchMaxTests(values):
-    timeHeap = searchMaxMaxHeapTest(values)
-    timeSLL = searchMaxSLLTest(values)
-    timeLL = searchMaxLLTest(values)
-    times = [timeHeap, timeLL, timeSLL]
+    times = []
+    for i in range(len(values)):
+        timeHeap = searchMaxMaxHeapTest(values[i])
+        timeSLL = searchMaxSLLTest(values[i])
+        timeLL = searchMaxLLTest(values[i])
+        times.append([timeHeap, timeLL, timeSLL])
     return times
 def searchMinTests(values):
     timeHeap = searchMinMinHeapTest(values)
@@ -284,9 +286,9 @@ def runAllTests():
         timesOSRankTests = []
         for i in range(n):
             values = []
-            values = generateRandomValues(0, j, 1, 10000)
-            #values = generateDecreasingValues(j,1)
-            #values = generateIncreasingValues(1, j)
+            values.append(generateRandomValues(0, j, 1, 10000))
+            values.append(generateIncreasingValues(1, j))
+            values.append(generateDecreasingValues(j,1))
             print("\nTest: ",i+1,"with ",j," elements")
             # Maximum
             timesMaxTest = searchMaxTests(values)
@@ -319,7 +321,7 @@ def runAllTests():
         finalTimesOSRankTest = np.append(finalTimesOSRankTest, timesOSRankTests)
 
     # Reshape matrix
-    finalTimesMaxTest = finalTimesMaxTest.reshape(len(x), totalDataStructures)
+    finalTimesMaxTest = finalTimesMaxTest.reshape(len(x), totalDataStructures,3)
     finalTimesMinTest = finalTimesMinTest.reshape(len(x), totalDataStructures)
     finalTimesOSSelectTest = finalTimesOSSelectTest.reshape(len(x), 2)
     finalTimesOSRankTest = finalTimesOSRankTest.reshape(len(x), 2)

@@ -85,7 +85,7 @@ def osRankBSTTest(values, targetValue):
     return time
 
 def osRankMinHeapTest(values, targetValue):
-    # Create BST with input values
+    # Create Min-heap with input values
     newHeap = HP.Minheap()
 
     newHeap.buildHeap(values)
@@ -120,12 +120,24 @@ def osSelectMinHeapTest(values, iPos):
     time = end-start
     return time
 
-def drawGraph(graphTitle, xValues, yHeapValues, yLinkedListValues, ySortredListValues):
+def drawGraph(graphTitle, labelHeapType, xValues, testFinalTimes,zoom = False):
     # FIXME
+    if testFinalTimes.shape[1] > 2:
+        yHeapValues = testFinalTimes[:, :1]
+        yLinkedListValues = testFinalTimes[:, 1:2]
+        ySortredListValues = testFinalTimes[:, 2:]
+    else:
+        yHeapValues = testFinalTimes[:, :1]
+        ySortredListValues = testFinalTimes[:, 1:]
+
     graph = plt.figure()
     plt.title(graphTitle)
     #fig,ax=plt.subplots()
-    ultimoEl = np.max(yHeapValues)
+
+
+    if zoom:
+        maxEl = np.max(testFinalTimes)
+        plt.ylim(0,maxEl/10)
     #plt.ylim(0,ultimoEl*3)
     #plt.ylim(0, 0.00002)
     #plt.xlim(50,5000)
@@ -134,8 +146,9 @@ def drawGraph(graphTitle, xValues, yHeapValues, yLinkedListValues, ySortredListV
     plt.xlabel("Numero di elementi")
     plt.ylabel("Tempi (s)")
     #plt.plot(xValues, yBstValues, color='red', label='ABR')
-    plt.plot(xValues, yHeapValues, color='red', label='Min-Heap')
-    plt.plot(xValues, yLinkedListValues, color='blue', label='Lista non ordinata')
+    plt.plot(xValues, yHeapValues, color='red', label=labelHeapType)
+    if testFinalTimes.shape[1] > 2:
+        plt.plot(xValues, yLinkedListValues, color='blue', label='Lista non ordinata')
     plt.plot(xValues, ySortredListValues, color='green', label='Lista ordinata')
     #plt.plot(xValues,rif,color='green',label = 'Rif log2')
     plt.legend()
@@ -221,21 +234,16 @@ def osSelectSLLTest(values, iPos):
     return time
 
 def searchMaxTests(values):
-    #print('\nSearching Max in BST test:\n')
-    timeBST = searchMaxMaxHeapTest(values)
-    #print('\nSearching Max in Sorted Linked List test:\n')
+    timeHeap = searchMaxMaxHeapTest(values)
     timeSLL = searchMaxSLLTest(values)
     timeLL = searchMaxLLTest(values)
-
-    times = [timeBST, timeLL, timeSLL]
+    times = [timeHeap, timeLL, timeSLL]
     return times
 def searchMinTests(values):
-    #print('\nSearching Max in BST test:\n')
-    timeBST = searchMinMinHeapTest(values)
-    #print('\nSearching Max in Sorted Linked List test:\n')
+    timeHeap = searchMinMinHeapTest(values)
     timeLL = searchMinLLTest(values)
     timeSLL = searchMinSLLTest(values)
-    times = [timeBST, timeLL, timeSLL]
+    times = [timeHeap, timeLL, timeSLL]
     return times
 
 def oSRankTests(values):
@@ -243,51 +251,102 @@ def oSRankTests(values):
     #randomTarget = values[len(values)-1]
     #print('\nSearching Max in BST test:\n')
     #FIXME
-    timeBST = osRankMinHeapTest(values,randomTarget)
+    timeHeap = osRankMinHeapTest(values,randomTarget)
     #print('\nSearching Max in Sorted Linked List test:\n')
     timeSLL = osRankSLLTest(values,randomTarget)
-    times = [timeBST, timeSLL]
+    times = [timeHeap, timeSLL]
     return times
 
 def oSSelectTests(values):
     iPosition = random.randint(1,len(values))
     #print('\nSearching Max in BST test:\n')
     # FIXME
-    timeBST = osSelectMinHeapTest(values,iPosition-1)
+    timeHeap = osSelectMinHeapTest(values,iPosition-1)
     #print('\nSearching Max in Sorted Linked List test:\n')
     timeSLL = osRankSLLTest(values,iPosition)
-    times = [timeBST, timeSLL]
+    times = [timeHeap, timeSLL]
     return times
 
 def runAllTests():
     # FIXME
-    n = 200
+    n = 150
+    totalDataStructures = 3
     #x = [g for g in range(200,2000,200)]
     x = [50,250,1000,5000,15000]
-    finalTimes = np.array([])
+    finalTimesMaxTest = np.array([])
+    finalTimesMinTest = np.array([])
+    finalTimesOSSelectTest = np.array([])
+    finalTimesOSRankTest = np.array([])
     for j in x:
         timesMaxTests = []
+        timesMinTests = []
+        timesOSSelectTests = []
+        timesOSRankTests = []
         for i in range(n):
             values = []
             values = generateRandomValues(0, j, 1, 10000)
             #values = generateDecreasingValues(j,1)
             #values = generateIncreasingValues(1, j)
             print("\nTest: ",i+1,"with ",j," elements")
+            # Maximum
             timesMaxTest = searchMaxTests(values)
             timesMaxTests.append(timesMaxTest)
+            # Minimum
+            timesMinTest = searchMinTests(values)
+            timesMinTests.append(timesMinTest)
+            # OS-Select
+            timesOSSelectTest = oSSelectTests(values)
+            timesOSSelectTests.append(timesOSSelectTest)
+            # OS-Rank
+            timesOSRankTest = oSRankTests(values)
+            timesOSRankTests.append(timesOSRankTest)
+
+        # Maximum
         timesMaxTests = np.sum(timesMaxTests, axis=0)
         timesMaxTests = np.divide(timesMaxTests, n)
-        finalTimes = np.append(finalTimes, timesMaxTests)
+        finalTimesMaxTest = np.append(finalTimesMaxTest, timesMaxTests)
+        # Minimum
+        timesMinTests = np.sum(timesMinTests, axis=0)
+        timesMinTests = np.divide(timesMinTests, n)
+        finalTimesMinTest = np.append(finalTimesMinTest, timesMinTests)
+        # OS-Select
+        timesOSSelectTests = np.sum(timesOSSelectTests, axis=0)
+        timesOSSelectTests = np.divide(timesOSSelectTests, n)
+        finalTimesOSSelectTest = np.append(finalTimesOSSelectTest, timesOSSelectTests)
+        # OS-Rank
+        timesOSRankTests = np.sum(timesOSRankTests, axis=0)
+        timesOSRankTests = np.divide(timesOSRankTests, n)
+        finalTimesOSRankTest = np.append(finalTimesOSRankTest, timesOSRankTests)
 
-    finalTimes = finalTimes.reshape(len(x), 3)
-    print("\nfinalTimes:\n",finalTimes)
-    finalTimesBST = finalTimes[:, :1]
-    finalTimesLL = finalTimes[:, 1:2]
-    finalTimesSLL = finalTimes[:,2:]
-    print("\n Tempi BST:",finalTimesBST)
-    print("\n Tempi SLL:", finalTimesLL)
-    graph = drawGraph("Cerca Max (rand)",x,finalTimesBST,finalTimesLL,finalTimesSLL)
-    graph.show()
+    # Reshape matrix
+    finalTimesMaxTest = finalTimesMaxTest.reshape(len(x), totalDataStructures)
+    finalTimesMinTest = finalTimesMinTest.reshape(len(x), totalDataStructures)
+    finalTimesOSSelectTest = finalTimesOSSelectTest.reshape(len(x), 2)
+    finalTimesOSRankTest = finalTimesOSRankTest.reshape(len(x), 2)
+    #print("\nfinalTimes:\n",finalTimesMaxTest)
+
+    #print("\n Tempi BST:",finalTimesBST)
+    #print("\n Tempi SLL:", finalTimesLL)
+    graphMaxRandValues = drawGraph("Cerca Max (random values)",'Max-heap',x,finalTimesMaxTest)
+    saveGraph("max_search_with_random_values",graphMaxRandValues)
+    #graphMaxRandValues.show()
+    graphMinRandValues = drawGraph("Cerca Min (random values)", 'Min-heap', x, finalTimesMinTest)
+    saveGraph("min_search_with_random_values", graphMinRandValues)
+    graphMinRandValuesZoom = drawGraph("Cerca Min (random values) zoom", 'Min-heap', x, finalTimesMinTest,True)
+    saveGraph("min_search_with_random_values_zoom", graphMinRandValuesZoom)
+
+
+    graphOSSelectRandValues = drawGraph("OS-select (random values)", 'Min-heap', x, finalTimesOSSelectTest)
+    saveGraph("os_select_with_random_values", graphOSSelectRandValues)
+    graphOSSelectRandValuesZoom = drawGraph("OS-select (random values) zoom", 'Min-heap', x, finalTimesOSSelectTest,True)
+    saveGraph("os_select_with_random_values_zoom", graphOSSelectRandValuesZoom)
+
+    graphOSRankRandValues = drawGraph("OS-rank (random values)", 'Min-heap', x, finalTimesOSRankTest)
+    saveGraph("os_rank_with_random_values", graphOSRankRandValues)
+    graphOSRankRandValuesZoom = drawGraph("OS-rank (random values) zoom", 'Min-heap', x, finalTimesOSRankTest,True)
+    saveGraph("os_rank_with_random_values_zoom", graphOSRankRandValuesZoom)
+
+
 
 
 if __name__ == "__main__":

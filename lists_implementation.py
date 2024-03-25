@@ -96,6 +96,26 @@ class LinkedList:
         else:
             print("Max finding is wrong")
 
+    def osSelect(self,k):
+        if k > self.length or k <= 0:
+            return None
+        mins = []
+
+        #mins.append(self.head)
+        min = self.head
+        for j in range(k):
+            min = self.head
+            currentNode = self.head.next
+            while currentNode:
+                if len(mins) > 0 and min is mins[len(mins)-1]:
+                    min = min.next
+                if min is not None and currentNode.value <= min.value and currentNode not in mins:
+                    min = currentNode
+                currentNode = currentNode.next
+
+            mins.append(min)
+
+        return mins[len(mins)-1].value
 
 class SortedLinkedList(LinkedList):
     def __init__(self):
@@ -290,6 +310,7 @@ def testOSLinkedList():
     linkedList.testMaxSearching(maxElement)
 
 if __name__ == "__main__":
+    """
     # Test lists
     linkedList = LinkedList()
     testLinkedList(linkedList)
@@ -299,3 +320,10 @@ if __name__ == "__main__":
     # Test OS for each list
     testOSLinkedList()
     testOSSortedLinkedList()
+    """
+
+    lista = LinkedList()
+    for i in range(10):
+        lista.addElement(random.randint(1,20))
+    lista.printList()
+    print("os-select con 3: ",lista.osSelect(6))

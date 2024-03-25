@@ -121,9 +121,6 @@ def osSelectMinHeapTest(values, iPos):
     return time
 
 def drawGraph(graphTitle, labelHeapType, xValues, testFinalTimes,zoom = False):
-
-    #dimensione = testFinalTimes.shape()
-    #testFinalTimes.reshape(5,3)
     # FIXME optimize it
     yHeapValues = []
     yLinkedListValues = []
@@ -135,49 +132,21 @@ def drawGraph(graphTitle, labelHeapType, xValues, testFinalTimes,zoom = False):
             ySortredListValues.append(testFinalTimes[i, 0, 2])
         else:
             ySortredListValues.append(testFinalTimes[i,0,1])
-    #primiEl = testFinalTimes[0]
-
-    """
-    if testFinalTimes.shape[2] > 2:
-        yHeapValues = testFinalTimes[:,:, :1]
-        yLinkedListValues = testFinalTimes[:,:, 1:2]
-        ySortredListValues = testFinalTimes[:,:, 2:]
-    else:
-        yHeapValues = testFinalTimes[:,:, :1]
-        ySortredListValues = testFinalTimes[:,:, 1:]
-    """
 
     graph = plt.figure()
     plt.title(graphTitle)
-    #fig,ax=plt.subplots()
-
-
     if zoom:
         maxEl = np.max(testFinalTimes)
-        plt.ylim(0,maxEl/10)
-    #plt.ylim(0,ultimoEl*3)
-    #plt.ylim(0, 0.00002)
-    #plt.xlim(50,5000)
-    #plt.xlim(0,500)
-    #ylog= np.log2(rif)
+        # set zoom scale
+        plt.ylim(0,maxEl/15)
+
     plt.xlabel("Numero di elementi")
     plt.ylabel("Tempi (s)")
-    #plt.plot(xValues, yBstValues, color='red', label='ABR')
     plt.plot(xValues, yHeapValues, color='red', label=labelHeapType)
     if testFinalTimes.shape[2] > 2:
         plt.plot(xValues, yLinkedListValues, color='blue', label='Lista non ordinata')
     plt.plot(xValues, ySortredListValues, color='green', label='Lista ordinata')
-    #plt.plot(xValues,rif,color='green',label = 'Rif log2')
     plt.legend()
-
-    """
-    x1 = xValues[:2]
-    y1 = yBstValues[:2]
-    zm = ax.inset_axes([0.1, 0.1, 0.8, 0.8])
-    zm.plot(x1,y1)
-    zm.indicate_inset_zoom(zm,edgecolor='green',lw=7)
-    """
-
     return graph
 
 def saveGraph(nameFile,graph):
@@ -296,7 +265,7 @@ def oSSelectTests(values):
 
 def runAllTests():
     # FIXME
-    n = 20
+    n = 2
     totalDataStructures = 3
     totalValueGenerationWays = 3
     #x = [g for g in range(200,2000,200)]
@@ -353,10 +322,6 @@ def runAllTests():
     # sorted data structures are 2
     finalTimesOSSelectTest = finalTimesOSSelectTest.reshape(len(x), totalValueGenerationWays,2)
     finalTimesOSRankTest = finalTimesOSRankTest.reshape(len(x), totalValueGenerationWays,2)
-    #print("\nfinalTimes:\n",finalTimesMaxTest)
-
-    #print("\n Tempi BST:",finalTimesBST)
-    #print("\n Tempi SLL:", finalTimesLL)
 
     # Max
     graphMaxRandValues = drawGraph("Cerca Max (random values)",'Max-heap',x,finalTimesMaxTest[:,:1,:])
@@ -367,6 +332,7 @@ def runAllTests():
 
     graphMaxDecValues = drawGraph("Cerca Max (decreasing values)", 'Max-heap', x, finalTimesMaxTest[:, 2:, :])
     saveGraph("max_search_with_decreasing_values", graphMaxDecValues)
+
 
 
     # Min
@@ -386,6 +352,8 @@ def runAllTests():
                                       True)
     saveGraph("min_search_with_decreasing_values_zoom", graphMinDecValuesZoom)
 
+    # to free up memory
+    plt.close('all')
 
     # OS-select
     graphOSSelectRandValues = drawGraph("OS-select (random values)", 'Min-heap', x, finalTimesOSSelectTest[:,:1,:])

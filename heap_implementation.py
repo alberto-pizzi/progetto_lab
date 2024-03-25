@@ -107,7 +107,7 @@ class Heap:
 
 class Maxheap(Heap):
     def editKey(self, i, value):
-        if value < self.heap[i] or self.heap[i]:
+        if not self.heap[i] or value < self.heap[i]:
             print("New key is lower than the old one")
             return
         self.heap[i] = value
@@ -187,23 +187,29 @@ def median(heap):
 
 #TODO remove these tests
 
-
-h1 = Maxheap(10)
+"""
+h1 = Maxheap()
 arr = np.array([4,1,3,2,16,9,10,14,8,7])
 
 print("Stampo array: ",arr)
 h1.buildHeap(arr)
+print("Aggiungo 20")
+h1.insert(20)
+h1.printHeap()
+
+"""
 h1.printHeap()
 print("lunghezza array: ", len(h1.heap))
 
-h1 = Maxheap(12)
+h1 = Maxheap()
 #arr = np.array([8,5,10,3,12,7])
 arr = np.array([38,203,1,45,39,10,34,90,10,2,100,1])
 h1.buildHeap(arr)
 h1.printHeap()
 print("lunghezza heap: ", len(h1.heap))
 
-h1 = Maxheap(10)
+
+h1 = Maxheap()
 h1.insert(4)
 h1.insert(1)
 h1.insert(3)
@@ -216,8 +222,9 @@ h1.insert(8)
 h1.insert(7)
 print("Stampa heap: ")
 h1.printHeap()
-print("stampa i-esimo elemento più grande")
-print(h1.osSelect(3))
+#print("stampa i-esimo elemento più grande")
+#print(h1.osSelect(3))
+
 
 
 h2 = Maxheap(10)

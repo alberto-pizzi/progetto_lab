@@ -219,6 +219,17 @@ def osSelectSLLTest(values, iPos):
     time = end-start
     return time
 
+def osSelectLLTest(values, iPos):
+    newSortedList = LL.LinkedList()
+    for i in values:
+        newSortedList.addElement(i)
+
+    start = timer()
+    rank = newSortedList.osSelect(iPos)
+    end = timer()
+    time = end-start
+    return time
+
 def searchMaxTests(values):
     times = []
     for i in range(len(values)):
@@ -258,9 +269,10 @@ def oSSelectTests(values):
     for i in range(len(values)):
         iPosition = random.randint(1, len(values[i]))
         timeHeap = osSelectMinHeapTest(values[i],iPosition-1)
+        timeLL = osSelectLLTest(values[i],iPosition)
         #print('\nSearching Max in Sorted Linked List test:\n')
-        timeSLL = osRankSLLTest(values[i],iPosition)
-        times.append([timeHeap, timeSLL])
+        timeSLL = osSelectSLLTest(values[i],iPosition)
+        times.append([timeHeap, timeLL, timeSLL])
     return times
 
 def runAllTests():
@@ -320,7 +332,7 @@ def runAllTests():
     finalTimesMinTest = finalTimesMinTest.reshape(len(x), totalValueGenerationWays,totalDataStructures)
     # FIXME
     # sorted data structures are 2
-    finalTimesOSSelectTest = finalTimesOSSelectTest.reshape(len(x), totalValueGenerationWays,2)
+    finalTimesOSSelectTest = finalTimesOSSelectTest.reshape(len(x), totalValueGenerationWays,3)
     finalTimesOSRankTest = finalTimesOSRankTest.reshape(len(x), totalValueGenerationWays,2)
 
     # Max

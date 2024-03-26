@@ -76,7 +76,7 @@ class Heap:
             return
 
     #extracts the root, so is not re-usable
-    def osRankNotOptimized(self,value):
+    def osRank(self, value):
         tmpRank = 0
         root = self.extractRoot()
         while tmpRank < self.size:
@@ -128,26 +128,6 @@ class Maxheap(Heap):
             self.heapify(maxValuePos)
     def maximum(self):
         return super()._rootValue()
-#TODO implment it for min-heap or remove it, fix it
-    #optimized os-rank with O(rank)
-    def _rankR(self, target, currentNodeIndex):
-        currentNodeValue = self.heap[currentNodeIndex]
-        if currentNodeValue >= target:
-            lValue = 0
-            rValue = 0
-            if self.leftChildPos(currentNodeIndex) < self.size:
-                lValue = self._rankR(target, self.leftChildPos(currentNodeIndex))
-            if self.rightChildPos(currentNodeIndex) < self.size:
-                rValue = self._rankR(target, self.rightChildPos(currentNodeIndex))
-            return lValue + rValue + 1
-        return 0
-
-    #doesn't extract the root, so is re-usable
-    def osRankOptimized(self, target):
-        if self.size > 0:
-            return self._rankR(target, 0)
-        else:
-            return 0
 
 class Minheap(Heap):
     def editKey(self, i, value):

@@ -269,13 +269,13 @@ def oSSelectTests(values):
 
 def runAllTests():
 
-    nIterations = 2
+    nIterations = 150
     # Heap (general), LL, SLL
     totalDataStructures = 3
     # Rand, inc , dec
     totalValueGenerationWays = 3
     #x = [g for g in range(200,2000,200)]
-    x = [50,250,1000,5000,15000]
+    x = [50,250,500,1000,5000,12000]
     finalTimesMaxTest = np.array([])
     finalTimesMinTest = np.array([])
     finalTimesOSSelectTest = np.array([])
@@ -304,6 +304,8 @@ def runAllTests():
             timesOSRankTest = oSRankTests(values)
             timesOSRankTests.append(timesOSRankTest)
 
+        # Calculate averages:
+
         # Maximum
         timesMaxTests = np.sum(timesMaxTests, axis=0)
         timesMaxTests = np.divide(timesMaxTests, nIterations)
@@ -321,7 +323,7 @@ def runAllTests():
         timesOSRankTests = np.divide(timesOSRankTests, nIterations)
         finalTimesOSRankTest = np.append(finalTimesOSRankTest, timesOSRankTests)
 
-    # Reshape matrix
+    # Reshape matrix:
 
     # Data structures with max and min comparing are 4: max-heap, min-heap, LL and SLL
     finalTimesMaxTest = finalTimesMaxTest.reshape(len(x), totalValueGenerationWays,totalDataStructures+1)

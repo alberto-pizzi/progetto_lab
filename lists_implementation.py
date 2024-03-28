@@ -99,23 +99,44 @@ class LinkedList:
     def osSelect(self,k):
         if k > self.length or k <= 0:
             return None
-        mins = []
+        rank = 0
+        # selection-sort
+        currentNode = self.head
+        while currentNode:
+            minNode = currentNode
+            nextNode = currentNode.next
+            while nextNode:
+                if nextNode.value < minNode.value:
+                    minNode = nextNode
+                nextNode = nextNode.next
+            if minNode != currentNode:
+                currentNode.value, minNode.value = minNode.value, currentNode.value
+            rank += 1
+            if rank == k:
+                return currentNode.value
+            currentNode = currentNode.next
+        return None
 
-        #mins.append(self.head)
-        min = self.head
-        for j in range(k):
-            min = self.head
-            currentNode = self.head.next
-            while currentNode:
-                if len(mins) > 0 and min is mins[len(mins)-1]:
-                    min = min.next
-                if min is not None and currentNode.value <= min.value and currentNode not in mins:
-                    min = currentNode
-                currentNode = currentNode.next
-
-            mins.append(min)
-
-        return mins[len(mins)-1].value
+    def osRank(self, value):
+        if not self.head:
+            return None
+        rank = 0
+        # selection-sort
+        currentNode = self.head
+        while currentNode:
+            minNode = currentNode
+            nextNode = currentNode.next
+            while nextNode:
+                if nextNode.value < minNode.value:
+                    minNode = nextNode
+                nextNode = nextNode.next
+            if minNode != currentNode:
+                currentNode.value, minNode.value = minNode.value, currentNode.value
+            rank += 1
+            if currentNode.value == value:
+                return rank
+            currentNode = currentNode.next
+        return 0
 
 class SortedLinkedList(LinkedList):
     def __init__(self):
@@ -310,7 +331,7 @@ def testOSLinkedList():
     linkedList.testMaxSearching(maxElement)
 
 if __name__ == "__main__":
-    """
+
     # Test lists
     linkedList = LinkedList()
     testLinkedList(linkedList)
@@ -320,10 +341,17 @@ if __name__ == "__main__":
     # Test OS for each list
     testOSLinkedList()
     testOSSortedLinkedList()
-    """
 
+    """
     lista = LinkedList()
+
     for i in range(10):
-        lista.addElement(random.randint(1,20))
+        if i==4 or i==5:
+            lista.addElement(5)
+        else:
+            lista.addElement(random.randint(1,20))
+
     lista.printList()
-    print("os-select con 3: ",lista.osSelect(6))
+    rango = lista.osSelect(5)
+    print("os-select con 7: ",rango)
+    """

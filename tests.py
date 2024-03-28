@@ -104,7 +104,7 @@ def createAndSaveTable(xValues, timesPerDataStructure, fileName):
         table = pd.DataFrame(timesPerDataStructure, index=xValues,
                              columns=['Min-heap', 'Lista ordinata', 'Lista non ordinata'])
 
-    # Correct precision
+    # Fix precision
     columns = list(table.columns)
     for i in columns:
         table[i] = [np.format_float_scientific(x, precision=precision) for x in table[i]]
@@ -345,7 +345,7 @@ def runAllTests():
     # Data structures with max and min comparing are 4: max-heap, min-heap, LL and SLL
     finalTimesMaxTest = finalTimesMaxTest.reshape(len(x), totalValueGenerationWays,totalDataStructures+1)
     finalTimesMinTest = finalTimesMinTest.reshape(len(x), totalValueGenerationWays,totalDataStructures+1)
-    # Sorted data structures are 2: min-heap and SLL
+    # Data structures are 3: min-heap, SLL and LL
     finalTimesOSSelectTest = finalTimesOSSelectTest.reshape(len(x), totalValueGenerationWays,totalDataStructures)
     finalTimesOSRankTest = finalTimesOSRankTest.reshape(len(x), totalValueGenerationWays,totalDataStructures)
 

@@ -102,7 +102,7 @@ def createAndSaveTable(xValues, timesPerDataStructure, fileName):
         table = pd.DataFrame(timesPerDataStructure,index=xValues, columns=['Min-Heap', 'Lista non ordinata', 'Lista ordinata','Max-Heap'])
     else:
         table = pd.DataFrame(timesPerDataStructure, index=xValues,
-                             columns=['Heap', 'Lista ordinata'])
+                             columns=['Min-heap', 'Lista ordinata', 'Lista non ordinata'])
 
     # Correct precision
     columns = list(table.columns)
@@ -114,7 +114,7 @@ def createAndSaveTable(xValues, timesPerDataStructure, fileName):
     table.to_latex(dir,index=True)
 
 
-def drawGraph(graphTitle, xValues, testFinalTimes, zoom=False):
+def drawGraph(graphTitle, xValues, testFinalTimes, zoom=False,zoomGrade=20):
     yMaxHeapValues = []
     yLinkedListValues = []
     ySortredListValues = []
@@ -128,23 +128,27 @@ def drawGraph(graphTitle, xValues, testFinalTimes, zoom=False):
             yMaxHeapValues.append(testFinalTimes[i, 0, 3])
         else:
             ySortredListValues.append(testFinalTimes[i,0,1])
+            yLinkedListValues.append(testFinalTimes[i, 0, 2])
 
 
     graph = plt.figure()
-    plt.title(graphTitle)
+
     if zoom:
-        zoomGrade = 15
+        title = graphTitle + ' ' + str(zoomGrade) + 'x'
         maxEl = np.max(testFinalTimes)
         # set zoom scale
         plt.ylim(0,maxEl/zoomGrade)
+    else:
+        title = graphTitle
 
+    plt.title(title)
     plt.xlabel("Numero di elementi")
     plt.ylabel("Tempi (s)")
 
     plt.plot(xValues, yMinHeapValues, color='red', label='Min-heap')
     if testFinalTimes.shape[2] > 3:
-        plt.plot(xValues, yMaxHeapValues, color='yellow', label='Max-heap')
-        plt.plot(xValues, yLinkedListValues, color='blue', label='Lista non ordinata')
+        plt.plot(xValues, yMaxHeapValues, color='pink', label='Max-heap')
+    plt.plot(xValues, yLinkedListValues, color='blue', label='Lista non ordinata')
     plt.plot(xValues, ySortredListValues, color='green', label='Lista ordinata')
     plt.legend()
     return graph
@@ -208,6 +212,17 @@ def osRankSLLTest(values, targetValue):
     time = end-start
     return time
 
+def osRankLLTest(values, targetValue):
+    newList = LL.LinkedList()
+    for i in values:
+        newList.addElement(i)
+
+    start = timer()
+    rank = newList.osRank(targetValue)
+    end = timer()
+    time = end-start
+    return time
+
 def osSelectSLLTest(values, iPos):
     newSortedList = LL.SortedLinkedList()
     for i in values:
@@ -255,7 +270,8 @@ def oSRankTests(values):
         randomTarget = random.choice(values[i])
         timeMinHeap = osRankMinHeapTest(values[i],randomTarget)
         timeSLL = osRankSLLTest(values[i],randomTarget)
-        times.append([timeMinHeap, timeSLL])
+        timeLL = osRankLLTest(values[i],randomTarget)
+        times.append([timeMinHeap, timeSLL,timeLL])
     return times
 
 def oSSelectTests(values):
@@ -264,7 +280,8 @@ def oSSelectTests(values):
         iPosition = random.randint(1, len(values[i]))
         timeMinHeap = osSelectMinHeapTest(values[i],iPosition-1)
         timeSLL = osSelectSLLTest(values[i],iPosition)
-        times.append([timeMinHeap, timeSLL])
+        timeLL = osSelectLLTest(values[i],iPosition)
+        times.append([timeMinHeap, timeSLL,timeLL])
     return times
 
 def runAllTests():
@@ -274,7 +291,7 @@ def runAllTests():
     totalDataStructures = 3
     # Rand, inc , dec
     totalValueGenerationWays = 3
-    #x = [g for g in range(200,2000,200)]
+    #x = [g for g in range(50,500,50)]
     x = [50,250,500,1000,5000,12000]
     finalTimesMaxTest = np.array([])
     finalTimesMinTest = np.array([])
@@ -329,39 +346,39 @@ def runAllTests():
     finalTimesMaxTest = finalTimesMaxTest.reshape(len(x), totalValueGenerationWays,totalDataStructures+1)
     finalTimesMinTest = finalTimesMinTest.reshape(len(x), totalValueGenerationWays,totalDataStructures+1)
     # Sorted data structures are 2: min-heap and SLL
-    finalTimesOSSelectTest = finalTimesOSSelectTest.reshape(len(x), totalValueGenerationWays,2)
-    finalTimesOSRankTest = finalTimesOSRankTest.reshape(len(x), totalValueGenerationWays,2)
+    finalTimesOSSelectTest = finalTimesOSSelectTest.reshape(len(x), totalValueGenerationWays,totalDataStructures)
+    finalTimesOSRankTest = finalTimesOSRankTest.reshape(len(x), totalValueGenerationWays,totalDataStructures)
 
     # Max
-    graphMaxRandValues = drawGraph("Cerca Max (random values)", x, finalTimesMaxTest[:, :1, :])
+    graphMaxRandValues = drawGraph("Cerca Max (valori random)", x, finalTimesMaxTest[:, :1, :])
     saveGraph("max_search_with_random_values",graphMaxRandValues)
     createAndSaveTable(x, finalTimesMaxTest[:, :1, :], 'max_with_random_values_table')
 
-    graphMaxIncValues = drawGraph("Cerca Max (increasing values)", x, finalTimesMaxTest[:, 1:2, :])
+    graphMaxIncValues = drawGraph("Cerca Max (valori crescenti)", x, finalTimesMaxTest[:, 1:2, :])
     saveGraph("max_search_with_increasing_values", graphMaxIncValues)
     createAndSaveTable(x, finalTimesMaxTest[:, 1:2, :], 'max_with_inc_values_table')
 
-    graphMaxDecValues = drawGraph("Cerca Max (decreasing values)", x, finalTimesMaxTest[:, 2:, :])
+    graphMaxDecValues = drawGraph("Cerca Max (valori decrescenti)", x, finalTimesMaxTest[:, 2:, :])
     saveGraph("max_search_with_decreasing_values", graphMaxDecValues)
     createAndSaveTable(x, finalTimesMaxTest[:, 2:3, :], 'max_with_dec_values_table')
 
     # Min
-    graphMinRandValues = drawGraph("Cerca Min (random values)", x, finalTimesMinTest[:,:1,:])
+    graphMinRandValues = drawGraph("Cerca Min (valori random)", x, finalTimesMinTest[:,:1,:])
     saveGraph("min_search_with_random_values", graphMinRandValues)
     createAndSaveTable(x, finalTimesMinTest[:, :1, :], 'min_with_random_values_table')
-    graphMinRandValuesZoom = drawGraph("Cerca Min (random values) zoom",  x, finalTimesMinTest[:,:1,:],True)
+    graphMinRandValuesZoom = drawGraph("Cerca Min (valori random) zoom",  x, finalTimesMinTest[:,:1,:],True)
     saveGraph("min_search_with_random_values_zoom", graphMinRandValuesZoom)
 
-    graphMinIncValues = drawGraph("Cerca Min (increasing values)",  x, finalTimesMinTest[:,1:2,:])
+    graphMinIncValues = drawGraph("Cerca Min (valori crescenti)",  x, finalTimesMinTest[:,1:2,:])
     saveGraph("min_search_with_increasing_values", graphMinIncValues)
     createAndSaveTable(x, finalTimesMinTest[:, 1:2, :], 'min_with_inc_values_table')
-    graphMinIncValuesZoom = drawGraph("Cerca Min (increasing values) zoom",  x, finalTimesMinTest[:,1:2,:],True)
+    graphMinIncValuesZoom = drawGraph("Cerca Min (valori crescenti) zoom",  x, finalTimesMinTest[:,1:2,:],True)
     saveGraph("min_search_with_increasing_values_zoom", graphMinIncValuesZoom)
 
-    graphMinDecValues = drawGraph("Cerca Min (decreasing values)", x, finalTimesMinTest[:, 2:, :])
+    graphMinDecValues = drawGraph("Cerca Min (valori decrescenti)", x, finalTimesMinTest[:, 2:, :])
     saveGraph("min_search_with_decreasing_values", graphMinDecValues)
     createAndSaveTable(x, finalTimesMinTest[:, 2:, :], 'min_with_dec_values_table')
-    graphMinDecValuesZoom = drawGraph("Cerca Min (decreasing values) zoom", x, finalTimesMinTest[:, 2:, :],
+    graphMinDecValuesZoom = drawGraph("Cerca Min (valori decrescenti) zoom", x, finalTimesMinTest[:, 2:, :],
                                       True)
     saveGraph("min_search_with_decreasing_values_zoom", graphMinDecValuesZoom)
 
@@ -369,50 +386,70 @@ def runAllTests():
     plt.close('all')
 
     # OS-select
-    graphOSSelectRandValues = drawGraph("OS-select (random values)",  x, finalTimesOSSelectTest[:,:1,:])
+    zoom = 1000
+    graphOSSelectRandValues = drawGraph("OS-select (valori random)",  x, finalTimesOSSelectTest[:,:1,:])
     saveGraph("os_select_with_random_values", graphOSSelectRandValues)
     createAndSaveTable(x, finalTimesOSSelectTest[:, :1, :], 'osselect_with_random_values_table')
-    graphOSSelectRandValuesZoom = drawGraph("OS-select (random values) zoom",  x, finalTimesOSSelectTest[:,:1,:],True)
-    saveGraph("os_select_with_random_values_zoom", graphOSSelectRandValuesZoom)
+    graphOSSelectRandValuesZoom20 = drawGraph("OS-select (valori random) zoom",  x, finalTimesOSSelectTest[:,:1,:],True)
+    saveGraph("os_select_with_random_values_zoom", graphOSSelectRandValuesZoom20)
+    graphOSSelectRandValuesZoom100 = drawGraph("OS-select (valori random) zoom", x, finalTimesOSSelectTest[:, :1, :],
+                                              True,zoom)
+    saveGraph("os_select_with_random_values_zoom_100", graphOSSelectRandValuesZoom100)
 
 
-    graphOSSelectIncValues = drawGraph("OS-select (increasing values)",  x, finalTimesOSSelectTest[:,1:2,:])
+    graphOSSelectIncValues = drawGraph("OS-select (valori crescenti)",  x, finalTimesOSSelectTest[:,1:2,:])
     saveGraph("os_select_with_increasing_values", graphOSSelectIncValues)
     createAndSaveTable(x, finalTimesOSSelectTest[:, 1:2, :], 'osselect_with_inc_values_table')
-    graphOSSelectIncValuesZoom = drawGraph("OS-select (increasing values) zoom",  x, finalTimesOSSelectTest[:,1:2,:],
+    graphOSSelectIncValuesZoom20 = drawGraph("OS-select (valori crescenti) zoom",  x, finalTimesOSSelectTest[:,1:2,:],
                                             True)
-    saveGraph("os_select_with_increasing_values_zoom", graphOSSelectIncValuesZoom)
+    saveGraph("os_select_with_increasing_values_zoom", graphOSSelectIncValuesZoom20)
+    graphOSSelectIncValuesZoom100 = drawGraph("OS-select (valori crescenti) zoom", x, finalTimesOSSelectTest[:, 1:2, :],
+                                             True,zoom)
+    saveGraph("os_select_with_increasing_values_zoom_100", graphOSSelectIncValuesZoom100)
 
 
-    graphOSSelectDecValues = drawGraph("OS-select (decreasing values)",  x,
+    graphOSSelectDecValues = drawGraph("OS-select (valori decrescenti)",  x,
                                        finalTimesOSSelectTest[:, 2:, :])
     saveGraph("os_select_with_decreasing_values", graphOSSelectDecValues)
     createAndSaveTable(x, finalTimesOSSelectTest[:, 2:, :], 'osselect_with_dec_values_table')
-    graphOSSelectDecValuesZoom = drawGraph("OS-select (decreasing values) zoom",  x,
+    graphOSSelectDecValuesZoom20 = drawGraph("OS-select (valori decrescenti) zoom",  x,
                                            finalTimesOSSelectTest[:, 2:, :],
                                            True)
-    saveGraph("os_select_with_decreasing_values_zoom", graphOSSelectDecValuesZoom)
+    saveGraph("os_select_with_decreasing_values_zoom", graphOSSelectDecValuesZoom20)
+    graphOSSelectDecValuesZoom100 = drawGraph("OS-select (valori decrescenti) zoom", x,
+                                           finalTimesOSSelectTest[:, 2:, :],
+                                           True,zoom)
+    saveGraph("os_select_with_decreasing_values_zoom_100", graphOSSelectDecValuesZoom100)
 
 
     #OS-rank
-    graphOSRankRandValues = drawGraph("OS-rank (random values)",  x, finalTimesOSRankTest[:,:1,:])
+
+    graphOSRankRandValues = drawGraph("OS-rank (valori random)",  x, finalTimesOSRankTest[:,:1,:])
     saveGraph("os_rank_with_random_values", graphOSRankRandValues)
     createAndSaveTable(x, finalTimesOSRankTest[:, :1, :], 'osrank_with_random_values_table')
-    graphOSRankRandValuesZoom = drawGraph("OS-rank (random values) zoom", x, finalTimesOSRankTest[:,:1,:],True)
-    saveGraph("os_rank_with_random_values_zoom", graphOSRankRandValuesZoom)
+    graphOSRankRandValuesZoom20 = drawGraph("OS-rank (valori random) zoom", x, finalTimesOSRankTest[:,:1,:],True)
+    saveGraph("os_rank_with_random_values_zoom", graphOSRankRandValuesZoom20)
+    graphOSRankRandValuesZoom100 = drawGraph("OS-rank (valori random) zoom", x, finalTimesOSRankTest[:, :1, :], True,zoom)
+    saveGraph("os_rank_with_random_values_zoom_100", graphOSRankRandValuesZoom100)
 
-    graphOSRankIncValues = drawGraph("OS-rank (increasing values)",  x, finalTimesOSRankTest[:,1:2,:])
+    graphOSRankIncValues = drawGraph("OS-rank (valori crescenti)",  x, finalTimesOSRankTest[:,1:2,:])
     saveGraph("os_rank_with_increasing_values", graphOSRankIncValues)
     createAndSaveTable(x, finalTimesOSSelectTest[:, 1:2, :], 'ossrank_with_inc_values_table')
-    graphOSRankIncValuesZoom = drawGraph("OS-rank (increasing values) zoom",  x, finalTimesOSRankTest[:,1:2,:], True)
-    saveGraph("os_rank_with_increasing_values_zoom", graphOSRankIncValuesZoom)
+    graphOSRankIncValuesZoom20 = drawGraph("OS-rank (valori crescenti) zoom",  x, finalTimesOSRankTest[:,1:2,:], True)
+    saveGraph("os_rank_with_increasing_values_zoom", graphOSRankIncValuesZoom20)
+    graphOSRankIncValuesZoom100 = drawGraph("OS-rank (valori crescenti) zoom", x, finalTimesOSRankTest[:, 1:2, :], True,zoom)
+    saveGraph("os_rank_with_increasing_values_zoom_100", graphOSRankIncValuesZoom100)
 
-    graphOSRankDecValues = drawGraph("OS-rank (decreasing values)",  x, finalTimesOSRankTest[:, 2:, :])
+    graphOSRankDecValues = drawGraph("OS-rank (valori decrescenti)",  x, finalTimesOSRankTest[:, 2:, :])
     saveGraph("os_rank_with_decreasing_values", graphOSRankDecValues)
     createAndSaveTable(x, finalTimesOSRankTest[:, 2:, :], 'osrank_with_dec_values_table')
-    graphOSRankDecValuesZoom = drawGraph("OS-rank (decreasing values) zoom",  x,
+    graphOSRankDecValuesZoom20 = drawGraph("OS-rank (valori decrescenti) zoom",  x,
                                          finalTimesOSRankTest[:, 2:, :], True)
-    saveGraph("os_rank_with_decreasing_values_zoom", graphOSRankDecValuesZoom)
+    saveGraph("os_rank_with_decreasing_values_zoom", graphOSRankDecValuesZoom20)
+    graphOSRankDecValuesZoom100 = drawGraph("OS-rank (valori decrescenti) zoom", x,
+                                         finalTimesOSRankTest[:, 2:, :], True,zoom)
+    saveGraph("os_rank_with_decreasing_values_zoom_100", graphOSRankDecValuesZoom100)
+
 
 
 

@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import math
 
@@ -37,7 +38,6 @@ class Heap:
         self.heap = self.heap[:self.size]
         self.heapify(0)
         return rootValue
-    # FIXME non produce lo stesso array che produce heapInsert
     def buildHeap(self,a):
         self.size = len(a)
         self.heap = a
@@ -87,13 +87,7 @@ class Heap:
                 root = self.extractRoot()
         return 0
 
-    #FIXME fix implementation of array (with dots)
     def insert(self, value):
-        """
-        if self.size >= self.maxsize:
-            print("Heap is full")
-            return
-        """
         self.size += 1
         self.heap = np.append(self.heap,True)
         self.editKey(self.size-1, value)
@@ -104,6 +98,28 @@ class Heap:
         for i in range(k):
             root = self.extractRoot()
         return root
+
+    def testParentPos(self, valuePos, parentExpected):
+        if parentExpected == self.heap[self.parentPos(valuePos - 1)]:
+            print("Parent is right.")
+        else:
+            print("Parent is wrong.")
+    def testRightChildPos(self, valuePos, childExpected):
+        if childExpected == self.heap[self.rightChildPos(valuePos - 1)]:
+            print("Right child is right.")
+        else:
+            print("Right child is wrong.")
+
+    def testLeftChildPos(self, valuePos, childExpected):
+        if childExpected == self.heap[self.leftChildPos(valuePos - 1)]:
+            print("Left child is right.")
+        else:
+            print("Left child is wrong.")
+    def testRoot(self,rootExpected):
+        if rootExpected == self._rootValue():
+            print("Root is right.")
+        else:
+            print("Root is wrong.")
 
 class Maxheap(Heap):
     def editKey(self, i, value):
@@ -155,99 +171,111 @@ class Minheap(Heap):
     def minimum(self):
         return super()._rootValue()
 
+def testHeaps():
+    minHeap = Minheap()
+    maxHeap = Maxheap()
 
-"""
-def median(heap):
-    if type(heap) == Maxheap:
-        #implementation
-    elif type(heap) == Minheap:
-        #implementation
+    totElements = 100
+
+    arr1 = []
+    arr2 = []
+    for i in range(totElements):
+        arr1.append(i+1)
+        arr2.append(arr1[i])
+    maxArr = max(arr1)
+    minArr = min(arr1)
+
+    minHeap.buildHeap(arr1)
+    maxHeap.buildHeap(arr2)
+
+    minHeap.printHeap()
+    maxHeap.printHeap()
+    print("\n--------test Heaps implementations--------\n")
+
+
+    print("\n------test Min-heap------\n")
+    minHeap.testRoot(minArr)
+    minHeap.testParentPos(2,1)
+    minHeap.testLeftChildPos(2,4)
+    minHeap.testRightChildPos(2,5)
+
+    print("\n------test Max-heap------\n")
+    maxHeap.testRoot(maxArr)
+    maxHeap.testParentPos(2,100)
+    maxHeap.testLeftChildPos(2,79)
+    maxHeap.testRightChildPos(2,94)
+
+
+def testMaxAndMinHeaps():
+    minHeap = Minheap()
+    maxHeap = Maxheap()
+
+    totElements = 100
+
+    arr1 = []
+    arr2 = []
+    for i in range(totElements):
+        arr1.append(random.randint(1, 200))
+        arr2.append(arr1[i])
+    maxArr = max(arr1)
+    minArr = min(arr1)
+
+    minHeap.buildHeap(arr1)
+    maxHeap.buildHeap(arr2)
+
+    print("\n--------Max and Min test for heaps--------\n")
+
+    print("\nPrint min-heap: ")
+    minHeap.printHeap()
+    print("\nPrint max-heap: ")
+    maxHeap.printHeap()
+
+    print("\n\nmin: ",minArr)
+    print("\nmax: ",maxArr)
+
+    if maxArr == maxHeap.maximum() and maxArr == minHeap.maximum():
+        print("Maximums is right.")
     else:
-        return None
+        print("Maximums is wrong")
 
-#TODO remove these tests
+    if minArr == maxHeap.minimum() and minArr == minHeap.minimum():
+        print("Minimums is right.")
+    else:
+        print("Minimums is wrong")
 
-"""
-h1 = Maxheap()
-arr = np.array([4,1,3,2,16,9,10,14,8,7])
+def testOSselectOSrankMinHeap():
+    minHeap1 = Minheap()
+    minHeap2 = Minheap()
+    totElements = 100
 
-print("Stampo array: ",arr)
-h1.buildHeap(arr)
-print("Aggiungo 20")
-h1.insert(20)
-h1.printHeap()
+    arr1 = []
+    for i in range(totElements):
+        arr1.append(i+1)
+    maxArr = max(arr1)
+    minArr = min(arr1)
 
-"""
-h1.printHeap()
-print("lunghezza array: ", len(h1.heap))
+    minHeap1.buildHeap(arr1)
+    minHeap2.buildHeap(arr1)
 
-h1 = Maxheap()
-#arr = np.array([8,5,10,3,12,7])
-arr = np.array([38,203,1,45,39,10,34,90,10,2,100,1])
-h1.buildHeap(arr)
-h1.printHeap()
-print("lunghezza heap: ", len(h1.heap))
+    print("\n--------OS-select and OS-rank test for Min-heap--------\n")
 
+    rank = 2
+    value = 2
+    expectedSelectValue = 2
+    expectedRank = 2
 
-h1 = Maxheap()
-h1.insert(4)
-h1.insert(1)
-h1.insert(3)
-h1.insert(2)
-h1.insert(16)
-h1.insert(9)
-h1.insert(10)
-h1.insert(14)
-h1.insert(8)
-h1.insert(7)
-print("Stampa heap: ")
-h1.printHeap()
-#print("stampa i-esimo elemento più grande")
-#print(h1.osSelect(3))
+    if expectedSelectValue == minHeap1.osSelect(rank):
+        print("OS-select is correct")
+    else:
+        print("OS-select is wrong")
+
+    if expectedRank == minHeap2.osRank(value):
+        print("OS-rank is correct")
+    else:
+        print("OS-rank is wrong")
 
 
-
-h2 = Maxheap(10)
-arr = np.array([4,1,3,2,16,9,10,14,8,7])
-h2.buildHeap(arr)
-print("Stampa heap: ")
-h2.printHeap()
-print("\n Trova il minimo: ")
-print(h2.minimum())
-print("\n Trova il max: ")
-print(h2.maximum())
-
-h3 = Minheap(3)
-h3.insert(3)
-h3.insert(2)
-h3.insert(16)
-print("\n Trova il minimo: ")
-print(h3.minimum())
-print("\n Trova il max: ")
-print(h3.maximum())
-
-
-while h1.heapMaximum() != 39:
-    print(h1.heapExtractMax())
-h1.printHeap()
-
-print("Rango di 39: ")
-print(h1.osRank(39))
-h1 = Maxheap(10)
-h1.insert(2)
-h1.insert(10)
-h1.printHeap()
-
-
-h4 = Maxheap()
-#for i in range(10):
-    #h4.insert(i+1)
-arr = [1,2,3,4,5,6,7,8,9,10]
-h4.buildHeap(arr)
-h4.printHeap()
-print(h4.heap[2])
-"""
-
-#print("\n Rango di 1: ")
-#print(h1.osRankNotOptimized(100))
-#print(h1.osRankOptimized(1))
+if __name__ == "__main__":
+    testHeaps()
+    testMaxAndMinHeaps()
+    testOSselectOSrankMinHeap()

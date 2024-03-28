@@ -305,17 +305,3 @@ if __name__ == "__main__":
     sortedList3 = SortedLinkedList()
     testOSSortedLinkedList(linkedList3)
     testOSSortedLinkedList(sortedList3)
-
-    """
-    lista = LinkedList()
-
-    for i in range(10):
-        if i==4 or i==5:
-            lista.addElement(5)
-        else:
-            lista.addElement(random.randint(1,20))
-
-    lista.printList()
-    rango = lista.osSelect(5)
-    print("os-select con 7: ",rango)
-    """

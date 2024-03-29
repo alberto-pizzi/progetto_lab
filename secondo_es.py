@@ -2,7 +2,7 @@ import random
 from timeit import default_timer as timer
 import matplotlib.pyplot as plt
 import numpy as np
-from math import floor
+import math
 
 def randomList(totElements):
     newList = []
@@ -19,7 +19,6 @@ def divider(totElements):
 
 def growerList(totElements):
     newList = []
-    numDigits = len(str(totElements))
     for i in range(totElements):
         newList.append(i/divider(totElements))
     return newList
@@ -44,13 +43,10 @@ def bucketSort(a):
     b = [None] * n
     for i in range(n):
         b[i] = []
-
     for i in range(n):
-        b[floor(n * a[i])].append(a[i])
-
+        b[math.floor(n * a[i])].append(a[i])
     for i in range(n):
         insertionSort(b[i])
-
     return [x for sublist in b for x in sublist]
 
 

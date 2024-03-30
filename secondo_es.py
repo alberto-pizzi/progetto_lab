@@ -3,31 +3,84 @@ from timeit import default_timer as timer
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import copy
 
-def randomList(totElements):
-    newList = []
-    maxNum = totElements * 10
-    for i in range(totElements):
-        newList.append(random.randint(0, maxNum)/divider(maxNum))
-    return newList
-
+"""
 def divider(totElements):
     numDigits = len(str(totElements))
     dividerStr = "1" + ("0" * (numDigits))
     dividerInt = int(dividerStr)
     return dividerInt
 
+def randomList(totElements):
+    newList = []
+    maxNum = 10000
+    for i in range(totElements):
+        newList.append(random.randint(0, maxNum)/divider(maxNum))
+        #newList.append(random.random())
+    return newList
+
+def listWithSameValues(totElements,value):
+    newList = []
+    for i in range(totElements):
+        newList.append(value/divider(value))
+    return newList
+"""
+
+def forceValue(totElements, value):
+    numDigits = len(str(totElements))
+    convertingStr = "0." + ("0" * (numDigits)) + str(value)
+    convertedInt = float(convertingStr)
+    return convertedInt
+
+def generateUniqueBucketRandList(totElements):
+    newList = []
+    maxNum = 10000
+    for i in range(totElements):
+        newList.append(forceValue(totElements, random.randint(1, maxNum)))
+        #newList.append(converter(totElements,i))
+    return newList
+
+def generateUniqueBucketGrowingList(totElements):
+    newList = []
+    for i in range(totElements):
+        newList.append(forceValue(totElements, i))
+        #newList.append(converter(totElements,i))
+    return newList
+
+def generateUniqueBucketDecreasingList(totElements):
+    newList = []
+    for i in range(totElements,-1,-1):
+        newList.append(forceValue(totElements, i))
+        #newList.append(converter(totElements,i))
+    return newList
+
+def generateRandomUniqueValues(totElements):
+    # Genera totElements valori univoci distribuiti uniformemente nell'intervallo [0, 1) e  li mescola
+    values = [(i + 0.5) /totElements for i in range(totElements)]
+    random.shuffle(values)
+    return values
+
+
+
+
 def growerList(totElements):
+    """
     newList = []
     for i in range(totElements):
         newList.append(i/divider(totElements))
     return newList
+    """
+    return [i/totElements for i in range(totElements)]
 
 def descendingList(totElements):
+    """
     newList = []
     for i in range(totElements,-1,-1):
         newList.append(i/divider(totElements))
     return newList
+    """
+    return [1 - i / totElements for i in range(1, totElements)]
 
 def insertionSort(a):
     for i in range(1, len(a)):
@@ -69,9 +122,11 @@ def bucketSortTest(a):
 
 def measurements(values):
     times = []
+    valuesIS = copy.deepcopy(values)
+    valuesBS = copy.deepcopy(values)
     for i in range(len(values)):
-        timeIS = insertionSortTest(values[i])
-        timeBS = bucketSortTest(values[i])
+        timeIS = insertionSortTest(valuesIS[i])
+        timeBS = bucketSortTest(valuesBS[i])
         times.append([timeIS, timeBS])
     return times
 
@@ -100,7 +155,8 @@ def drawGraph(graphTitle, x, y, zoom=False, zoomGrade=20):
     plt.show()
 
 def runAllTests():
-    nIterations = 20
+    nIterations = 100
+    totalTypesOfValues = 6
     #x = [50,250,500,1000,5000,12000]
     x = [g for g in range(50, 1050, 100)]
     finalTimes = np.array([])
@@ -108,9 +164,12 @@ def runAllTests():
         allTimes = []
         for i in range(nIterations):
             values = []
-            values.append(randomList(j))
+            values.append(generateRandomUniqueValues(j))
             values.append(growerList(j))
             values.append(descendingList(j))
+            values.append(generateUniqueBucketRandList(j))
+            values.append(generateUniqueBucketGrowingList(j))
+            values.append(generateUniqueBucketDecreasingList(j))
             print("\nTest: ",i+1,"with ",j," elements")
             times = measurements(values)
             allTimes.append(times)
@@ -119,13 +178,20 @@ def runAllTests():
         allTimes = np.divide(allTimes, nIterations)
         finalTimes = np.append(finalTimes, allTimes)
 
-    finalTimes = finalTimes.reshape(len(x), 3, 2)
+    finalTimes = finalTimes.reshape(len(x), totalTypesOfValues, 2)
 
-    drawGraph("Insertion-sort vs Bucket-sort (valori random)", x, finalTimes[:, :1, :])
+    drawGraph("Insertion-sort vs Bucket-sort (valori random uniformi)", x, finalTimes[:, :1, :])
+    drawGraph("Insertion-sort vs Bucket-sort (valori random uniformi)", x, finalTimes[:, :1, :],True)
+
     drawGraph("Insertion-sort vs Bucket-sort (valori crescenti)", x, finalTimes[:, 1:2, :])
-    drawGraph("Insertion-sort vs Bucket-sort (valori decrescenti)", x, finalTimes[:, 2:, :])
-    drawGraph("Insertion-sort vs Bucket-sort (valori random)", x, finalTimes[:, :1, :],True)
-    drawGraph("Insertion-sort vs Bucket-sort (valori decrescenti)", x, finalTimes[:, 2:, :],True)
+    drawGraph("Insertion-sort vs Bucket-sort (valori decrescenti)", x, finalTimes[:, 2:3, :])
+    drawGraph("Insertion-sort vs Bucket-sort (valori decrescenti)", x, finalTimes[:, 2:3, :],True)
+
+    drawGraph("Insertion-sort vs Bucket-sort (valori in un bucket,rand)", x, finalTimes[:, 3:4, :])
+    drawGraph("Insertion-sort vs Bucket-sort (valori in un bucket,crescenti)", x, finalTimes[:, 4:5, :])
+    drawGraph("Insertion-sort vs Bucket-sort (valori in un bucket,decrescenti)", x, finalTimes[:, 5:, :])
+
+    #drawGraph("Insertion-sort vs Bucket-sort ()", x, finalTimes[:, :1, :])
 
 
 if __name__ == "__main__":

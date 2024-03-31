@@ -26,6 +26,13 @@ def listWithSameValues(totElements,value):
         newList.append(value/divider(value))
     return newList
 """
+def randomList(totElements):
+    newList = []
+    #maxNum = 10000
+    for i in range(totElements):
+        #newList.append(random.randint(0, maxNum)/divider(maxNum))
+        newList.append(random.random())
+    return newList
 
 def forceValue(totElements, value):
     numDigits = len(str(totElements))
@@ -156,7 +163,7 @@ def drawGraph(graphTitle, x, y, zoom=False, zoomGrade=20):
 
 def runAllTests():
     nIterations = 100
-    totalTypesOfValues = 6
+    totalTypesOfValues = 7
     #x = [50,250,500,1000,5000,12000]
     x = [g for g in range(50, 1050, 100)]
     finalTimes = np.array([])
@@ -170,6 +177,7 @@ def runAllTests():
             values.append(generateUniqueBucketRandList(j))
             values.append(generateUniqueBucketGrowingList(j))
             values.append(generateUniqueBucketDecreasingList(j))
+            values.append(randomList(j))
             print("\nTest: ",i+1,"with ",j," elements")
             times = measurements(values)
             allTimes.append(times)
@@ -189,8 +197,10 @@ def runAllTests():
 
     drawGraph("Insertion-sort vs Bucket-sort (valori in un bucket,rand)", x, finalTimes[:, 3:4, :])
     drawGraph("Insertion-sort vs Bucket-sort (valori in un bucket,crescenti)", x, finalTimes[:, 4:5, :])
-    drawGraph("Insertion-sort vs Bucket-sort (valori in un bucket,decrescenti)", x, finalTimes[:, 5:, :])
+    drawGraph("Insertion-sort vs Bucket-sort (valori in un bucket,decrescenti)", x, finalTimes[:, 5:6, :])
 
+    drawGraph("Insertion-sort vs Bucket-sort (valori random, distr. random)", x, finalTimes[:, 6:, :])
+    drawGraph("Insertion-sort vs Bucket-sort (valori random, distr. random)", x, finalTimes[:, 6:, :],True)
     #drawGraph("Insertion-sort vs Bucket-sort ()", x, finalTimes[:, :1, :])
 
 

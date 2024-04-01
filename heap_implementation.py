@@ -1,11 +1,12 @@
 import random
 import numpy as np
 import math
+from abc import ABC, abstractmethod
 
 def swap(a,b):
     return (b,a)
 
-class Heap:
+class Heap(ABC):
     def __init__(self):
         self.size = 0
         self.heap = []
@@ -25,8 +26,11 @@ class Heap:
         #print ("Print heap: ")
         print("\n",self.heap, end=" ")
 
+    @abstractmethod
     def heapify(self,pos):
         pass
+
+    @abstractmethod
     def editKey(self,i,value):
         pass
     def extractRoot(self):
@@ -122,6 +126,8 @@ class Heap:
             print("Root is wrong.")
 
 class Maxheap(Heap):
+    def __init__(self):
+        super().__init__()
     def editKey(self, i, value):
         if not self.heap[i] or value < self.heap[i]:
             print("New key is lower than the old one")
@@ -146,6 +152,8 @@ class Maxheap(Heap):
         return super()._rootValue()
 
 class Minheap(Heap):
+    def __init__(self):
+        super().__init__()
     def editKey(self, i, value):
         if value > self.heap[i]:
             print("New key is bigger than the old one")

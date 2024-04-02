@@ -291,7 +291,6 @@ def runAllTests():
     totalDataStructures = 3
     # Rand, inc , dec
     totalValueGenerationWays = 3
-    #x = [g for g in range(50,500,50)]
     x = [50,250,500,1000,5000,12000]
     finalTimesMaxTest = np.array([])
     finalTimesMinTest = np.array([])

@@ -86,7 +86,11 @@ class LinkedList:
             print("Max finding is wrong")
 
     def copyLinkedList(self):
-        newList = LinkedList()
+        if type(self) == SortedLinkedList:
+            newList = SortedLinkedList()
+        else:
+            newList = LinkedList()
+
         currentCopyNode = self.head
         while currentCopyNode:
             newList.addElement(currentCopyNode.value)
@@ -305,6 +309,7 @@ def testMaxAndMinSearch(linkedList):
 
 if __name__ == "__main__":
 
+
     # Test lists
     linkedList1 = LinkedList()
     testLinkedList(linkedList1)
@@ -320,4 +325,6 @@ if __name__ == "__main__":
     sortedList3 = SortedLinkedList()
     testOSSortedLinkedList(linkedList3)
     testOSSortedLinkedList(sortedList3)
+
+
 

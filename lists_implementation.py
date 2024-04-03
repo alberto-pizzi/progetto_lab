@@ -85,12 +85,23 @@ class LinkedList:
         else:
             print("Max finding is wrong")
 
+    def copyLinkedList(self):
+        newList = LinkedList()
+        currentCopyNode = self.head
+        while currentCopyNode:
+            newList.addElement(currentCopyNode.value)
+            currentCopyNode = currentCopyNode.next
+        return newList
     def osSelect(self,k):
         if k > self.length or k <= 0:
             return None
+
+        # Copy list nodes into another list
+        copyList = self.copyLinkedList()
+
         rank = 0
         # selection-sort
-        currentNode = self.head
+        currentNode = copyList.head
         while currentNode:
             minNode = currentNode
             nextNode = currentNode.next
@@ -109,9 +120,13 @@ class LinkedList:
     def osRank(self, value):
         if not self.head:
             return None
+
+        # Copy list nodes into another list
+        copyList = self.copyLinkedList()
+
         rank = 0
         # selection-sort
-        currentNode = self.head
+        currentNode = copyList.head
         while currentNode:
             minNode = currentNode
             nextNode = currentNode.next
@@ -305,3 +320,4 @@ if __name__ == "__main__":
     sortedList3 = SortedLinkedList()
     testOSSortedLinkedList(linkedList3)
     testOSSortedLinkedList(sortedList3)
+

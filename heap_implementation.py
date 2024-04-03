@@ -9,7 +9,7 @@ def swap(a,b):
 class Heap(ABC):
     def __init__(self):
         self.size = 0
-        self.heap = []
+        self.heap = np.array([])
     #Return position of i's parent
     def parentPos(self,pos):
         if self.size > 0:

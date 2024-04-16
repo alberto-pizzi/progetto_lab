@@ -37,10 +37,12 @@ class Heap(ABC):
         if self.size < 1:
             return None
         rootValue = self.heap[0]
-        self.heap[0] = self.heap[self.size-1]
+        lastValue = self.heap[self.size-1]
+        self.heap[0] = lastValue
+        del self.heap[self.size-1]
         self.size -= 1
-        self.heap = self.heap[:self.size]
-        self.heapify(0)
+        if self.size > 1:
+            self.heapify(0)
         return rootValue
     def buildHeap(self,a):
         self.size = len(a)
@@ -257,13 +259,16 @@ def testOSselectOSrankMinHeap():
     totElements = 100
 
     arr1 = []
+    arr2 = []
     for i in range(totElements):
         arr1.append(i+1)
+        arr2.append(i+1)
+
     maxArr = max(arr1)
     minArr = min(arr1)
 
     minHeap1.buildHeap(arr1)
-    minHeap2.buildHeap(arr1)
+    minHeap2.buildHeap(arr2)
 
     print("\n--------OS-select and OS-rank test for Min-heap--------\n")
 
